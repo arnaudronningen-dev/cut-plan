@@ -4,835 +4,1012 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Arnaud — Cut Plan 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0d0f0e;--bg2:#141614;--bg3:#1a1d1a;
-    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
-    --text:#e8ebe7;--muted:#7a8278;
-    --accent:#a8d4a0;--accent2:#6bbd5e;
-    --warn:#d4a84a;--danger:#d4614a;--info:#4a9fd4;
-    --mono:'DM Mono',monospace;--serif:'Fraunces',serif;
+/* ── THEME ─────────────────────────────────────────────── */
+:root {
+  --bg:#ffffff; --bg2:#f6f7f5; --bg3:#eef0ec;
+  --border:rgba(0,0,0,0.08); --border2:rgba(0,0,0,0.14);
+  --text:#1a1d19; --muted:#6b6f69;
+  --accent:#2a7d3f; --accent2:#1f6131;
+  --accent-bg:rgba(42,125,63,0.08); --accent-border:rgba(42,125,63,0.25);
+  --warn:#b06b00; --warn-bg:rgba(176,107,0,0.08);
+  --danger:#c0392b; --danger-bg:rgba(192,57,43,0.08);
+  --info:#1a5fa8; --info-bg:rgba(26,95,168,0.08);
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);
+  --mono:'DM Mono',monospace; --serif:'Fraunces',serif;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#0d0f0e; --bg2:#141614; --bg3:#1a1d1a;
+    --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
+    --text:#e8ebe7; --muted:#7a8278;
+    --accent:#6bbd5e; --accent2:#a8d4a0;
+    --accent-bg:rgba(107,189,94,0.1); --accent-border:rgba(107,189,94,0.3);
+    --warn:#d4a84a; --warn-bg:rgba(212,168,74,0.1);
+    --danger:#d4614a; --danger-bg:rgba(212,97,74,0.1);
+    --info:#4a9fd4; --info-bg:rgba(74,159,212,0.1);
+    --shadow:none;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.6;min-height:100vh;}
+}
 
-  .header{padding:2rem 2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
-  .header-left h1{font-family:var(--serif);font-weight:300;font-size:2rem;color:var(--text);letter-spacing:-0.02em;line-height:1.1;}
-  .header-left h1 em{font-style:italic;color:var(--accent);}
-  .header-left p{color:var(--muted);font-size:11px;margin-top:4px;letter-spacing:0.05em;text-transform:uppercase;}
-  .header-right{display:flex;gap:1rem;flex-wrap:wrap;}
-  .stat-pill{background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:6px 14px;text-align:center;}
-  .stat-pill .val{font-size:18px;font-weight:500;color:var(--text);}
-  .stat-pill .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+/* ── RESET ─────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--mono);font-size:13px;line-height:1.6;
+  min-height:100vh;
+}
 
-  nav{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;}
-  nav::-webkit-scrollbar{display:none;}
-  nav button{background:none;border:none;color:var(--muted);font-family:var(--mono);font-size:11px;padding:14px 20px;cursor:pointer;white-space:nowrap;letter-spacing:0.06em;text-transform:uppercase;border-bottom:2px solid transparent;transition:all 0.15s;}
-  nav button:hover{color:var(--text);}
-  nav button.active{color:var(--accent);border-bottom-color:var(--accent);}
+/* ── APP SHELL ─────────────────────────────────────────── */
+.app{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  grid-template-rows:auto 1fr;
+  min-height:100vh;
+}
+@media(max-width:768px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto auto 1fr;}
+}
 
-  .page{display:none;padding:1.5rem 2rem;max-width:900px;}
-  .page.active{display:block;}
+/* ── HEADER ────────────────────────────────────────────── */
+.header{
+  grid-column:1/-1;
+  padding:1.5rem 2rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:1rem;
+  background:var(--bg);
+  position:sticky;top:0;z-index:100;
+}
+@media(max-width:768px){.header{padding:1rem 1.25rem;}}
 
-  h2{font-family:var(--serif);font-weight:300;font-size:1.2rem;color:var(--text);margin-bottom:1rem;margin-top:1.5rem;}
-  h2:first-child{margin-top:0;}
-  h3{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:0.5rem;}
+.header-left h1{
+  font-family:var(--serif);font-weight:300;font-size:1.6rem;
+  color:var(--text);letter-spacing:-0.02em;line-height:1;
+}
+.header-left h1 em{font-style:italic;color:var(--accent);}
+.header-left p{color:var(--muted);font-size:10px;margin-top:3px;letter-spacing:0.05em;text-transform:uppercase;}
+.header-pills{display:flex;gap:0.75rem;flex-wrap:wrap;}
+.hpill{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 12px;text-align:center;}
+.hpill .v{font-size:16px;font-weight:500;color:var(--text);}
+.hpill .l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
 
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
-  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;}
-  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1rem;}
-  @media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr;}}
-  @media(max-width:450px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+/* ── SIDEBAR NAV (desktop) ─────────────────────────────── */
+.sidebar{
+  border-right:1px solid var(--border);
+  padding:1.5rem 0;
+  background:var(--bg2);
+  position:sticky;top:56px;
+  height:calc(100vh - 56px);
+  overflow-y:auto;
+}
+@media(max-width:768px){.sidebar{display:none;}}
 
-  .card{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;margin-bottom:1rem;}
-  .card:last-child{margin-bottom:0;}
-  .metric-card{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:0.875rem 1rem;}
-  .metric-card .val{font-size:22px;font-weight:500;color:var(--text);margin-bottom:2px;}
-  .metric-card .val.highlight{color:var(--accent2);}
-  .metric-card .val.warn{color:var(--warn);}
-  .metric-card .lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
-  .metric-card .sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.sidebar-section{padding:0 1rem 1rem;}
+.sidebar-label{font-size:9px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);padding:0 0.75rem;margin-bottom:0.25rem;}
+.nav-btn{
+  display:flex;align-items:center;gap:8px;
+  width:100%;background:none;border:none;
+  color:var(--muted);font-family:var(--mono);font-size:12px;
+  padding:7px 12px;border-radius:6px;cursor:pointer;
+  text-align:left;transition:all 0.15s;
+}
+.nav-btn:hover{background:var(--bg3);color:var(--text);}
+.nav-btn.active{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);}
+.nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
 
-  .alert{border-radius:4px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:12px;line-height:1.5;border-left:3px solid;}
-  .alert-warn{background:rgba(212,168,74,0.08);border-color:var(--warn);color:#d4c47a;}
-  .alert-danger{background:rgba(212,97,74,0.08);border-color:var(--danger);color:#d4917a;}
-  .alert-info{background:rgba(74,159,212,0.08);border-color:var(--info);color:#7ab4d4;}
-  .alert-success{background:rgba(168,212,160,0.08);border-color:var(--accent2);color:var(--accent);}
+/* ── BOTTOM NAV (mobile) ───────────────────────────────── */
+.bottom-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:8px 0 max(8px,env(safe-area-inset-bottom));
+  z-index:100;
+}
+@media(max-width:768px){.bottom-nav{display:flex;}}
+.bnav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:none;color:var(--muted);
+  font-family:var(--mono);font-size:9px;padding:4px 2px;cursor:pointer;
+  letter-spacing:0.04em;text-transform:uppercase;transition:color 0.15s;
+}
+.bnav-btn.active{color:var(--accent);}
+.bnav-icon{font-size:18px;line-height:1;}
 
-  .badge{display:inline-block;font-size:10px;padding:2px 6px;border-radius:3px;letter-spacing:0.04em;text-transform:uppercase;font-weight:500;}
-  .badge-warn{background:rgba(212,168,74,0.15);color:var(--warn);}
-  .badge-danger{background:rgba(212,97,74,0.15);color:var(--danger);}
-  .badge-success{background:rgba(107,189,94,0.15);color:var(--accent2);}
-  .badge-info{background:rgba(74,159,212,0.15);color:var(--info);}
-  .badge-mod{background:rgba(212,168,74,0.12);color:var(--warn);font-size:9px;margin-left:4px;padding:1px 5px;}
+/* ── MAIN CONTENT ──────────────────────────────────────── */
+.main{
+  overflow-y:auto;
+}
+@media(max-width:768px){.main{padding-bottom:72px;}}
 
-  .progress-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-  .progress-label{width:65px;font-size:11px;color:var(--muted);flex-shrink:0;}
-  .progress-bar{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
-  .progress-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
-  .progress-value{width:110px;font-size:11px;color:var(--muted);text-align:right;flex-shrink:0;}
+.page{display:none;padding:2rem;max-width:860px;}
+.page.active{display:block;}
+@media(max-width:768px){.page{padding:1rem 1rem 1.5rem;}}
 
-  table{width:100%;border-collapse:collapse;}
-  th{font-size:10px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:500;}
-  td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);vertical-align:top;}
-  tr:last-child td{border-bottom:none;}
-  tr:hover td{background:rgba(255,255,255,0.02);}
+/* ── SYNC STATUS ───────────────────────────────────────── */
+.sync-bar{
+  display:flex;align-items:center;gap:6px;
+  font-size:10px;color:var(--muted);
+  padding:6px 2rem;border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+@media(max-width:768px){.sync-bar{padding:6px 1rem;}}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
+.sync-dot.synced{background:var(--accent);}
+.sync-dot.syncing{background:var(--warn);animation:pulse 1s infinite;}
+.sync-dot.error{background:var(--danger);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
 
-  .day-block{margin-bottom:0.75rem;border:1px solid var(--border);border-radius:6px;overflow:hidden;}
-  .day-header{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1rem;background:var(--bg2);cursor:pointer;user-select:none;gap:10px;}
-  .day-header:hover{background:var(--bg3);}
-  .day-title{font-size:13px;font-weight:500;color:var(--text);}
-  .day-header-right{display:flex;align-items:center;gap:8px;}
-  .chevron{color:var(--muted);transition:transform 0.2s;font-size:10px;}
-  .day-body{display:none;background:var(--bg);}
-  .day-body.open{display:block;}
-  .day-block.open .chevron{transform:rotate(180deg);}
-  .ex-row{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 1rem;border-bottom:1px solid var(--border);gap:10px;}
-  .ex-row:last-child{border-bottom:none;}
-  .ex-name{font-size:12px;font-weight:500;color:var(--text);flex:1;}
-  .ex-detail{font-size:11px;color:var(--muted);text-align:right;max-width:55%;line-height:1.4;}
+/* ── TYPOGRAPHY ────────────────────────────────────────── */
+h2{
+  font-family:var(--serif);font-weight:300;font-size:1.25rem;
+  color:var(--text);margin-bottom:1rem;margin-top:1.75rem;letter-spacing:-0.01em;
+}
+h2:first-child{margin-top:0;}
+h3{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--accent);margin-bottom:0.5rem;}
 
-  .meal-card{border:1px solid var(--border);border-radius:6px;margin-bottom:0.625rem;overflow:hidden;}
-  .meal-header{display:flex;justify-content:space-between;align-items:flex-start;padding:0.875rem 1rem 0.5rem;background:var(--bg2);}
-  .meal-time{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;}
-  .meal-name{font-size:13px;font-weight:500;color:var(--text);}
-  .meal-kcal{font-size:18px;font-weight:500;color:var(--accent);white-space:nowrap;}
-  .meal-body{padding:0.5rem 1rem 0.875rem;background:var(--bg);}
-  .meal-items{font-size:11px;color:var(--muted);margin-bottom:6px;}
-  .macro-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
-  .mpill{font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid var(--border2);}
-  .mpill-p{color:var(--accent);border-color:rgba(107,189,94,0.25);}
-  .mpill-c{color:var(--info);border-color:rgba(74,159,212,0.25);}
-  .mpill-f{color:var(--warn);border-color:rgba(212,168,74,0.25);}
+/* ── GRID ──────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;margin-bottom:1rem;}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr 1fr;}}
+@media(max-width:400px){.g3,.g4{grid-template-columns:1fr 1fr;}}
 
-  .timeline{position:relative;padding-left:28px;}
-  .timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:1px;background:var(--border2);}
-  .tl-item{position:relative;margin-bottom:1.5rem;}
-  .tl-dot{position:absolute;left:-22px;top:5px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg);}
-  .tl-dot.done{background:var(--accent2);}
-  .tl-dot.active{background:var(--warn);box-shadow:0 0 0 3px rgba(212,168,74,0.2);}
-  .tl-dot.future{background:var(--bg3);border-color:var(--border2);}
-  .tl-date{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;}
-  .tl-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;font-family:var(--serif);font-style:italic;}
-  .tl-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+/* ── CARDS ─────────────────────────────────────────────── */
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;
+}
+.card:last-child{margin-bottom:0;}
+.mc{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:0.875rem 1rem;
+}
+.mc .v{font-size:20px;font-weight:500;color:var(--text);margin-bottom:2px;}
+.mc .v.green{color:var(--accent);}
+.mc .v.warn{color:var(--warn);}
+.mc .v.red{color:var(--danger);}
+.mc .l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+.mc .s{font-size:11px;color:var(--muted);margin-top:2px;}
 
-  .chart-wrap{position:relative;height:180px;margin-bottom:1rem;}
+/* ── ALERTS ────────────────────────────────────────────── */
+.alert{border-radius:6px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:12px;line-height:1.5;border-left:3px solid;}
+.aw{background:var(--warn-bg);border-color:var(--warn);color:var(--warn);}
+.ad{background:var(--danger-bg);border-color:var(--danger);color:var(--danger);}
+.ai{background:var(--info-bg);border-color:var(--info);color:var(--info);}
+.as{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
 
-  .form-row{display:flex;gap:0.75rem;margin-bottom:0.75rem;flex-wrap:wrap;}
-  .form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:90px;}
-  .form-group label{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
-  .form-group input,.form-group select{background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:13px;padding:7px 10px;outline:none;transition:border 0.15s;width:100%;}
-  .form-group input:focus,.form-group select:focus{border-color:var(--accent2);}
-  .form-group select option{background:var(--bg3);}
-  .btn{background:var(--accent2);color:#0d0f0e;border:none;border-radius:4px;font-family:var(--mono);font-size:12px;font-weight:500;padding:8px 20px;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;}
-  .btn:hover{background:var(--accent);}
-  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2);border-radius:4px;font-family:var(--mono);font-size:11px;padding:6px 14px;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;}
-  .btn-ghost:hover{color:var(--text);}
+/* ── BADGES ────────────────────────────────────────────── */
+.badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;letter-spacing:0.04em;text-transform:uppercase;font-weight:500;}
+.bw{background:var(--warn-bg);color:var(--warn);}
+.bd{background:var(--danger-bg);color:var(--danger);}
+.bs{background:var(--accent-bg);color:var(--accent);}
+.bi{background:var(--info-bg);color:var(--info);}
+.bmod{background:var(--warn-bg);color:var(--warn);font-size:8px;margin-left:4px;padding:1px 4px;}
 
-  /* SHOULDER TOGGLE */
-  .shoulder-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1rem;background:var(--bg3);border-radius:6px;margin-bottom:1rem;}
-  .toggle-wrap{display:flex;align-items:center;gap:10px;}
-  .toggle{position:relative;width:40px;height:22px;flex-shrink:0;}
-  .toggle input{opacity:0;width:0;height:0;}
-  .toggle-slider{position:absolute;inset:0;background:var(--bg2);border:1px solid var(--border2);border-radius:11px;cursor:pointer;transition:0.2s;}
-  .toggle-slider:before{content:'';position:absolute;width:16px;height:16px;left:2px;top:2px;background:var(--muted);border-radius:50%;transition:0.2s;}
-  .toggle input:checked+.toggle-slider{background:rgba(107,189,94,0.2);border-color:var(--accent2);}
-  .toggle input:checked+.toggle-slider:before{transform:translateX(18px);background:var(--accent2);}
-  .shoulder-label{font-size:12px;color:var(--text);}
-  .shoulder-sub{font-size:11px;color:var(--muted);}
+/* ── PROGRESS ──────────────────────────────────────────── */
+.prow{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.plabel{width:60px;font-size:11px;color:var(--muted);flex-shrink:0;}
+.pbar{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.pfill{height:100%;border-radius:3px;transition:width 0.5s ease;}
+.pval{width:120px;font-size:11px;color:var(--muted);text-align:right;flex-shrink:0;}
 
-  /* STEP SLIDER */
-  .steps-row{display:flex;align-items:center;gap:12px;padding:0.875rem 1rem;background:var(--bg3);border-radius:6px;margin-bottom:1rem;}
-  .steps-row label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;width:50px;}
-  .steps-row input[type=range]{flex:1;accent-color:var(--accent2);}
-  .steps-val{font-size:14px;font-weight:500;color:var(--accent);width:70px;text-align:right;flex-shrink:0;}
+/* ── TABLE ─────────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{font-size:9px;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-weight:500;}
+.tbl td{padding:8px 10px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);vertical-align:top;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:var(--bg3);}
 
-  /* ADAPTIVE PANEL */
-  .adaptive-panel{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:1rem 1.25rem;margin-bottom:1rem;}
-  .adaptive-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
-  .adaptive-row:last-child{border-bottom:none;}
-  .adaptive-label{font-size:11px;color:var(--muted);}
-  .adaptive-value{font-size:13px;font-weight:500;color:var(--text);}
-  .adaptive-value.green{color:var(--accent2);}
-  .adaptive-value.warn{color:var(--warn);}
-  .adaptive-value.red{color:var(--danger);}
+/* ── WORKOUT DAYS ──────────────────────────────────────── */
+.day-block{margin-bottom:0.625rem;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.day-hdr{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1rem;background:var(--bg2);cursor:pointer;user-select:none;gap:8px;transition:background 0.15s;}
+.day-hdr:hover{background:var(--bg3);}
+.day-title{font-size:12px;font-weight:500;color:var(--text);}
+.day-hdr-r{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.chev{color:var(--muted);transition:transform 0.2s;font-size:10px;}
+.day-body{display:none;background:var(--bg);}
+.day-body.open{display:block;}
+.day-block.open .chev{transform:rotate(180deg);}
+.ex-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 1rem;border-bottom:1px solid var(--border);gap:8px;}
+.ex-row:last-child{border-bottom:none;}
+.ex-name{font-size:12px;font-weight:500;color:var(--text);flex:1;}
+.ex-det{font-size:11px;color:var(--muted);text-align:right;max-width:52%;line-height:1.4;}
 
-  .rule-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
-  .rule-item:last-child{border-bottom:none;}
-  .rule-num{font-size:11px;color:var(--muted);flex-shrink:0;width:20px;padding-top:1px;}
-  .rule-text{font-size:12px;color:var(--text);line-height:1.5;}
-  .rule-text strong{color:var(--accent);font-weight:500;}
+/* ── MEALS ─────────────────────────────────────────────── */
+.meal-card{border:1px solid var(--border);border-radius:8px;margin-bottom:0.625rem;overflow:hidden;}
+.meal-hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:0.75rem 1rem 0.5rem;background:var(--bg2);}
+.meal-time{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:2px;}
+.meal-name{font-size:13px;font-weight:500;color:var(--text);}
+.meal-kcal{font-size:18px;font-weight:500;color:var(--accent);white-space:nowrap;}
+.meal-body{padding:0.5rem 1rem 0.75rem;background:var(--bg);}
+.meal-items{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.macro-row{display:flex;gap:5px;flex-wrap:wrap;}
+.mp{font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid;}
+.mp-p{color:var(--accent);border-color:var(--accent-border);}
+.mp-c{color:var(--info);border-color:rgba(74,159,212,0.3);}
+.mp-f{color:var(--warn);border-color:rgba(176,107,0,0.25);}
 
-  .shoulder-status{display:flex;align-items:center;gap:10px;padding:0.875rem 1rem;background:var(--bg3);border-radius:6px;margin-bottom:1rem;}
-  .shoulder-indicator{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+/* ── TIMELINE ──────────────────────────────────────────── */
+.tl{position:relative;padding-left:28px;}
+.tl::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:1px;background:var(--border2);}
+.tl-item{position:relative;margin-bottom:1.5rem;}
+.tl-dot{position:absolute;left:-22px;top:5px;width:10px;height:10px;border-radius:50%;border:2px solid var(--bg);}
+.tl-dot.active{background:var(--warn);box-shadow:0 0 0 3px var(--warn-bg);}
+.tl-dot.future{background:var(--bg3);border-color:var(--border2);}
+.tl-date{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px;}
+.tl-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;font-family:var(--serif);font-style:italic;}
+.tl-desc{font-size:12px;color:var(--muted);line-height:1.5;}
 
-  ::-webkit-scrollbar{width:4px;height:4px;}
-  ::-webkit-scrollbar-track{background:var(--bg);}
-  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+/* ── CHART ─────────────────────────────────────────────── */
+.chart-wrap{position:relative;height:180px;margin-bottom:1rem;}
 
-  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
-  .page.active{animation:fadeIn 0.2s ease;}
+/* ── FORMS ─────────────────────────────────────────────── */
+.frow{display:flex;gap:0.75rem;margin-bottom:0.75rem;flex-wrap:wrap;}
+.fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:85px;}
+.fg label{font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
+.fg input,.fg select{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  color:var(--text);font-family:var(--mono);font-size:13px;
+  padding:8px 10px;outline:none;transition:border 0.15s;width:100%;
+}
+.fg input:focus,.fg select:focus{border-color:var(--accent);}
+.fg select option{background:var(--bg3);}
+.btn{
+  background:var(--accent);color:#fff;border:none;border-radius:6px;
+  font-family:var(--mono);font-size:12px;font-weight:500;
+  padding:8px 20px;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;
+}
+.btn:hover{opacity:0.88;}
+.btn-sm{
+  background:transparent;color:var(--muted);border:1px solid var(--border2);
+  border-radius:4px;font-family:var(--mono);font-size:10px;
+  padding:3px 8px;cursor:pointer;transition:all 0.15s;
+}
+.btn-sm:hover{color:var(--text);}
+
+/* ── TOGGLE ────────────────────────────────────────────── */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:0.875rem 1rem;background:var(--bg3);border-radius:8px;margin-bottom:0.75rem;}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.tslider{position:absolute;inset:0;background:var(--border2);border-radius:12px;cursor:pointer;transition:0.2s;}
+.tslider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.toggle input:checked+.tslider{background:var(--accent);}
+.toggle input:checked+.tslider:before{transform:translateX(18px);}
+.toggle-info .tl1{font-size:12px;font-weight:500;color:var(--text);}
+.toggle-info .tl2{font-size:11px;color:var(--muted);}
+
+/* ── STEPS SLIDER ──────────────────────────────────────── */
+.steps-row{display:flex;align-items:center;gap:12px;padding:0.875rem 1rem;background:var(--bg3);border-radius:8px;margin-bottom:0.75rem;}
+.steps-row label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0;width:44px;}
+.steps-row input[type=range]{flex:1;accent-color:var(--accent);}
+.steps-val{font-size:14px;font-weight:500;color:var(--accent);width:68px;text-align:right;flex-shrink:0;}
+
+/* ── ADAPTIVE PANEL ────────────────────────────────────── */
+.adp-panel{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.adp-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);}
+.adp-row:last-child{border-bottom:none;}
+.adp-label{font-size:11px;color:var(--muted);}
+.adp-val{font-size:13px;font-weight:500;color:var(--text);}
+.adp-val.green{color:var(--accent);}
+.adp-val.warn{color:var(--warn);}
+.adp-val.red{color:var(--danger);}
+
+/* ── RULES ─────────────────────────────────────────────── */
+.rule-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border);}
+.rule-item:last-child{border-bottom:none;}
+.rule-num{font-size:11px;color:var(--muted);flex-shrink:0;width:20px;padding-top:1px;}
+.rule-text{font-size:12px;color:var(--text);line-height:1.5;}
+.rule-text strong{color:var(--accent);font-weight:500;}
+
+/* ── SHOULDER STATUS ───────────────────────────────────── */
+.sh-status{display:flex;align-items:center;gap:10px;padding:0.875rem 1rem;background:var(--bg3);border-radius:8px;margin-bottom:1rem;}
+.sh-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── SCROLLBAR ─────────────────────────────────────────── */
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* ── ANIMATIONS ────────────────────────────────────────── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+.page.active{animation:fadeIn 0.18s ease;}
 </style>
 </head>
 <body>
+<div class="app">
 
-<div class="header">
-  <div class="header-left">
-    <h1>Cut <em>to lean</em></h1>
-    <p>Arnaud · 189cm · 23yo · Mar 16 → Jun 1, 2026</p>
-  </div>
-  <div class="header-right">
-    <div class="stat-pill"><div class="val">91.8</div><div class="lbl">Start kg</div></div>
-    <div class="stat-pill"><div class="val">84</div><div class="lbl">Target kg</div></div>
-    <div class="stat-pill"><div class="val" id="weeks-left-val">—</div><div class="lbl">Weeks left</div></div>
-    <div class="stat-pill"><div class="val" id="loss-val">—</div><div class="lbl">Logged loss</div></div>
-  </div>
-</div>
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <h1>Cut <em>to lean</em></h1>
+      <p>Arnaud · 189cm · 23yo · Mar 16 → Jun 1, 2026</p>
+    </div>
+    <div class="header-pills">
+      <div class="hpill"><div class="v">91.8</div><div class="l">Start kg</div></div>
+      <div class="hpill"><div class="v">84</div><div class="l">Target kg</div></div>
+      <div class="hpill"><div class="v" id="h-weeks">—</div><div class="l">Weeks left</div></div>
+      <div class="hpill"><div class="v" id="h-loss">—</div><div class="l">Lost so far</div></div>
+    </div>
+  </header>
 
-<nav>
-  <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
-  <button onclick="showPage('training',this)">Training</button>
-  <button onclick="showPage('nutrition',this)">Nutrition</button>
-  <button onclick="showPage('phases',this)">Phases</button>
-  <button onclick="showPage('rules',this)">Rules</button>
-</nav>
+  <!-- ── SIDEBAR ── -->
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Dashboard</div>
+      <button class="nav-btn active" onclick="showPage('dashboard',this)"><span class="nav-icon">◎</span>Overview</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Plan</div>
+      <button class="nav-btn" onclick="showPage('training',this)"><span class="nav-icon">◈</span>Training</button>
+      <button class="nav-btn" onclick="showPage('nutrition',this)"><span class="nav-icon">◇</span>Nutrition</button>
+      <button class="nav-btn" onclick="showPage('phases',this)"><span class="nav-icon">◉</span>Phases</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Reference</div>
+      <button class="nav-btn" onclick="showPage('rules',this)"><span class="nav-icon">◻</span>Rules</button>
+    </div>
+  </nav>
 
-<!-- ═══════════════ DASHBOARD ═══════════════ -->
-<div class="page active" id="dashboard">
+  <!-- ── MAIN ── -->
+  <div class="main">
+    <!-- sync bar -->
+    <div class="sync-bar">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="sync-text">Connecting…</span>
+    </div>
 
-  <!-- ADAPTIVE CONTROLS -->
-  <h2 style="margin-top:0.5rem">Adaptive settings</h2>
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="dashboard">
 
-  <!-- Shoulder toggle -->
-  <div class="shoulder-toggle-row">
-    <div>
-      <div class="shoulder-label" id="shoulder-label-text">Shoulder status: <strong id="shoulder-status-text" style="color:var(--danger)">Injured — protocol active</strong></div>
-      <div class="shoulder-sub">Toggle when cleared — updates training burn estimate</div>
-    </div>
-    <label class="toggle">
-      <input type="checkbox" id="shoulder-toggle" onchange="onShoulderChange()">
-      <span class="toggle-slider"></span>
-    </label>
-  </div>
+      <h2 style="margin-top:0">Adaptive settings</h2>
 
-  <!-- Steps slider -->
-  <div class="steps-row">
-    <label>Steps</label>
-    <input type="range" id="steps-slider" min="2000" max="15000" step="500" value="4000" oninput="onStepsChange()">
-    <div class="steps-val"><span id="steps-display">4,000</span><span style="font-size:10px;color:var(--muted)"> /day</span></div>
-  </div>
-
-  <!-- Adaptive TDEE panel -->
-  <div class="adaptive-panel">
-    <h3 style="margin-bottom:10px">Live calorie targets — updates when you log weight</h3>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Current weight</span>
-      <span class="adaptive-value" id="adp-weight">91.8 kg</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Estimated BMR</span>
-      <span class="adaptive-value" id="adp-bmr">—</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Training activity burn</span>
-      <span class="adaptive-value" id="adp-training">—</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Steps burn (above baseline)</span>
-      <span class="adaptive-value green" id="adp-steps">—</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Total TDEE</span>
-      <span class="adaptive-value" id="adp-tdee">—</span>
-    </div>
-    <div class="adaptive-row" style="margin-top:4px;padding-top:10px;border-top:1px solid var(--border2)">
-      <span class="adaptive-label" style="color:var(--text);font-size:12px">Recommended training day calories</span>
-      <span class="adaptive-value green" style="font-size:16px" id="adp-target">—</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label" style="color:var(--text);font-size:12px">Recommended rest day calories</span>
-      <span class="adaptive-value" style="color:var(--info);font-size:14px" id="adp-rest">—</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Actual deficit (training day)</span>
-      <span class="adaptive-value" id="adp-deficit">—</span>
-    </div>
-    <div class="adaptive-row">
-      <span class="adaptive-label">Projected weekly fat loss</span>
-      <span class="adaptive-value" id="adp-weekly">—</span>
-    </div>
-  </div>
-
-  <!-- Macro breakdown -->
-  <div class="card">
-    <h3>Macro split at current target</h3>
-    <div style="margin-top:8px">
-      <div class="progress-row">
-        <span class="progress-label">Protein</span>
-        <div class="progress-bar"><div class="progress-fill" style="width:38%;background:var(--accent2)" id="bar-p"></div></div>
-        <span class="progress-value" id="bar-p-label">215g · 860 kcal</span>
+      <!-- Shoulder toggle -->
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="tl1">Shoulder status: <span id="sh-status-text" style="color:var(--danger)">Injured — protocol active</span></div>
+          <div class="tl2">Toggle when cleared — updates burn estimate & training tab</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="shoulder-toggle" onchange="onShoulderChange()">
+          <span class="tslider"></span>
+        </label>
       </div>
-      <div class="progress-row">
-        <span class="progress-label">Carbs</span>
-        <div class="progress-bar"><div class="progress-fill" id="bar-c" style="background:var(--info)"></div></div>
-        <span class="progress-value" id="bar-c-label">—</span>
-      </div>
-      <div class="progress-row">
-        <span class="progress-label">Fats</span>
-        <div class="progress-bar"><div class="progress-fill" style="width:27%;background:var(--warn)" id="bar-f"></div></div>
-        <span class="progress-value" id="bar-f-label">68g · 610 kcal</span>
-      </div>
-    </div>
-    <div id="diet-alert" style="margin-top:10px"></div>
-  </div>
 
-  <!-- Weight tracker -->
-  <h2>Weight tracker</h2>
-  <div class="card">
-    <div class="form-row">
-      <div class="form-group">
-        <label>Weight (kg)</label>
-        <input type="number" id="new-weight" step="0.1" min="75" max="100" placeholder="e.g. 90.5">
+      <!-- Steps slider -->
+      <div class="steps-row">
+        <label>Steps</label>
+        <input type="range" id="steps-slider" min="2000" max="15000" step="500" value="4000" oninput="onStepsChange()">
+        <div class="steps-val"><span id="steps-disp">4,000</span><span style="font-size:9px;color:var(--muted)">/day</span></div>
       </div>
-      <div class="form-group">
-        <label>BF% (athletic)</label>
-        <input type="number" id="new-bf" step="0.1" min="5" max="35" placeholder="e.g. 17.5">
+
+      <!-- Adaptive TDEE panel -->
+      <div class="adp-panel">
+        <h3 style="margin-bottom:10px">Live targets — recalculates on every weigh-in</h3>
+        <div class="adp-row"><span class="adp-label">Current weight</span><span class="adp-val" id="a-weight">91.8 kg</span></div>
+        <div class="adp-row"><span class="adp-label">BMR (Mifflin)</span><span class="adp-val" id="a-bmr">—</span></div>
+        <div class="adp-row"><span class="adp-label">Training burn</span><span class="adp-val" id="a-train">—</span></div>
+        <div class="adp-row"><span class="adp-label">Steps burn (above 4k baseline)</span><span class="adp-val green" id="a-steps">—</span></div>
+        <div class="adp-row"><span class="adp-label">Total TDEE</span><span class="adp-val" id="a-tdee">—</span></div>
+        <div class="adp-row" style="padding-top:10px;border-top:2px solid var(--border)">
+          <span class="adp-label" style="color:var(--text);font-size:12px">Training day target</span>
+          <span class="adp-val green" style="font-size:17px" id="a-target">—</span>
+        </div>
+        <div class="adp-row">
+          <span class="adp-label" style="color:var(--text);font-size:12px">Rest day target</span>
+          <span class="adp-val" style="color:var(--info);font-size:14px" id="a-rest">—</span>
+        </div>
+        <div class="adp-row"><span class="adp-label">Daily deficit</span><span class="adp-val" id="a-deficit">—</span></div>
+        <div class="adp-row"><span class="adp-label">Projected weekly loss</span><span class="adp-val" id="a-weekly">—</span></div>
       </div>
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" id="new-date">
+
+      <!-- Macro breakdown -->
+      <div class="card">
+        <h3>Macro split at current target</h3>
+        <div style="margin-top:8px">
+          <div class="prow"><span class="plabel">Protein</span><div class="pbar"><div class="pfill" style="background:var(--accent)" id="bp"></div></div><span class="pval" id="bp-l">215g · 860 kcal</span></div>
+          <div class="prow"><span class="plabel">Carbs</span><div class="pbar"><div class="pfill" style="background:var(--info)" id="bc"></div></div><span class="pval" id="bc-l">—</span></div>
+          <div class="prow"><span class="plabel">Fats</span><div class="pbar"><div class="pfill" style="background:var(--warn)" id="bf"></div></div><span class="pval" id="bf-l">68g · 612 kcal</span></div>
+        </div>
+        <div id="diet-alert" style="margin-top:10px"></div>
       </div>
-      <div class="form-group" style="justify-content:flex-end">
-        <label style="visibility:hidden">log</label>
-        <button class="btn" onclick="logWeight()">Log</button>
+
+      <!-- Weight tracker -->
+      <h2>Weight tracker</h2>
+      <div class="card">
+        <div class="frow">
+          <div class="fg"><label>Weight (kg)</label><input type="number" id="nw" step="0.1" min="75" max="105" placeholder="e.g. 90.5"></div>
+          <div class="fg"><label>BF% (athletic)</label><input type="number" id="nbf" step="0.1" min="5" max="35" placeholder="e.g. 17.5"></div>
+          <div class="fg"><label>Date</label><input type="date" id="nd"></div>
+          <div class="fg" style="justify-content:flex-end"><label style="visibility:hidden">x</label><button class="btn" onclick="logWeight()">Log</button></div>
+        </div>
+        <div class="chart-wrap"><canvas id="wChart"></canvas></div>
+        <div id="log-wrap"></div>
       </div>
     </div>
-    <div class="chart-wrap">
-      <canvas id="weightChart"></canvas>
+
+    <!-- ══ TRAINING ══ -->
+    <div class="page" id="training">
+      <div class="sh-status">
+        <div class="sh-dot" id="tr-sh-dot" style="background:var(--danger)"></div>
+        <div>
+          <div style="font-size:12px;font-weight:500" id="tr-sh-text">Shoulder: injury protocol active</div>
+          <div style="font-size:11px;color:var(--muted)">No heavy pressing, dips, or overhead press. Toggle cleared in Dashboard → week 4 re-assess (Apr 13).</div>
+        </div>
+      </div>
+      <div id="training-days"></div>
     </div>
-    <div id="log-table-wrap"></div>
-  </div>
-</div>
 
-<!-- ═══════════════ TRAINING ═══════════════ -->
-<div class="page" id="training">
-  <div class="shoulder-status">
-    <div class="shoulder-indicator" id="training-shoulder-dot" style="background:var(--danger)"></div>
-    <div>
-      <div style="font-size:12px;font-weight:500;color:var(--text)" id="training-shoulder-text">Shoulder: injury protocol active</div>
-      <div style="font-size:11px;color:var(--muted)">No heavy pressing, no dips, no overhead press. Week 4 (Apr 13) re-assessment. Toggle cleared in Dashboard when pain-free 7 days.</div>
+    <!-- ══ NUTRITION ══ -->
+    <div class="page" id="nutrition">
+      <div class="g4">
+        <div class="mc"><div class="v green" id="nut-train">2,250</div><div class="l">Training day kcal</div></div>
+        <div class="mc"><div class="v" style="color:var(--info)" id="nut-rest">2,050</div><div class="l">Rest day kcal</div></div>
+        <div class="mc"><div class="v">215g</div><div class="l">Protein daily</div></div>
+        <div class="mc"><div class="v">2,850</div><div class="l">Refeed day kcal</div><div class="s">every 2 weeks</div></div>
+      </div>
+      <h2>Sample training day</h2>
+      <div id="meals-list"></div>
+      <h2>Best protein sources</h2>
+      <div class="card">
+        <table class="tbl">
+          <tr><th>Food</th><th>Portion</th><th>Protein</th><th>Kcal</th></tr>
+          <tr><td>Chicken breast</td><td>200g cooked</td><td>62g</td><td>330</td></tr>
+          <tr><td>Canned tuna</td><td>150g drained</td><td>35g</td><td>165</td></tr>
+          <tr><td>Salmon fillet</td><td>150g</td><td>34g</td><td>290</td></tr>
+          <tr><td>Cottage cheese 0%</td><td>250g</td><td>30g</td><td>135</td></tr>
+          <tr><td>Skyr</td><td>200g</td><td>24g</td><td>130</td></tr>
+          <tr><td>Greek yogurt 0%</td><td>200g</td><td>22g</td><td>120</td></tr>
+          <tr><td>Egg whites</td><td>200g</td><td>22g</td><td>104</td></tr>
+          <tr><td>Eggs (whole)</td><td>3 eggs</td><td>19g</td><td>215</td></tr>
+          <tr><td>Whey protein</td><td>1 scoop 30g</td><td>24g</td><td>120</td></tr>
+          <tr><td>Turkey breast</td><td>150g cooked</td><td>42g</td><td>220</td></tr>
+        </table>
+      </div>
+      <h2>Practical rules</h2>
+      <div class="card">
+        <div class="rule-item"><span class="rule-num">01</span><span class="rule-text"><strong>Protein is non-negotiable.</strong> 215g every single day — the #1 lever for muscle preservation.</span></div>
+        <div class="rule-item"><span class="rule-num">02</span><span class="rule-text"><strong>Creatine: 5g daily, keep taking it.</strong> Intracellular water, not fat. Stopping costs performance for no benefit.</span></div>
+        <div class="rule-item"><span class="rule-num">03</span><span class="rule-text"><strong>Rest days:</strong> cut 100–150g carbs. Keep protein and fat identical. Floor is 55g fat/day.</span></div>
+        <div class="rule-item"><span class="rule-num">04</span><span class="rule-text"><strong>2-week stall:</strong> drop 100 kcal from carbs only. Never below 1,950 kcal total.</span></div>
+        <div class="rule-item"><span class="rule-num">05</span><span class="rule-text"><strong>Refeed every 2 weeks:</strong> ~2,850 kcal, all extra from carbs. Same protein, same fat. Not a cheat day.</span></div>
+        <div class="rule-item"><span class="rule-num">06</span><span class="rule-text"><strong>10,000 steps/day</strong> — ~270 kcal net above your 4k baseline. Zero recovery cost. Best tool you have.</span></div>
+      </div>
     </div>
-  </div>
-  <div id="training-days"></div>
-</div>
 
-<!-- ═══════════════ NUTRITION ═══════════════ -->
-<div class="page" id="nutrition">
-  <div class="grid-4">
-    <div class="metric-card"><div class="val" id="nut-training">2,250</div><div class="lbl">Training day kcal</div></div>
-    <div class="metric-card"><div class="val" id="nut-rest">2,050</div><div class="lbl">Rest day kcal</div></div>
-    <div class="metric-card"><div class="val">215g</div><div class="lbl">Protein (every day)</div></div>
-    <div class="metric-card"><div class="val">2,850</div><div class="lbl">Refeed day kcal</div><div class="sub">every 2 weeks</div></div>
-  </div>
-  <h2>Sample training day</h2>
-  <div id="meals-list"></div>
-  <h2>Best protein sources</h2>
-  <div class="card">
-    <table>
-      <tr><th>Food</th><th>Portion</th><th>Protein</th><th>Kcal</th></tr>
-      <tr><td>Chicken breast</td><td>200g cooked</td><td>62g</td><td>330</td></tr>
-      <tr><td>Canned tuna (water)</td><td>150g drained</td><td>35g</td><td>165</td></tr>
-      <tr><td>Salmon fillet</td><td>150g</td><td>34g</td><td>290</td></tr>
-      <tr><td>Cottage cheese 0%</td><td>250g</td><td>30g</td><td>135</td></tr>
-      <tr><td>Skyr</td><td>200g</td><td>24g</td><td>130</td></tr>
-      <tr><td>Greek yogurt 0%</td><td>200g</td><td>22g</td><td>120</td></tr>
-      <tr><td>Egg whites</td><td>200g</td><td>22g</td><td>104</td></tr>
-      <tr><td>Eggs (whole)</td><td>3 eggs</td><td>19g</td><td>215</td></tr>
-      <tr><td>Whey protein</td><td>1 scoop 30g</td><td>24g</td><td>120</td></tr>
-      <tr><td>Turkey breast</td><td>150g cooked</td><td>42g</td><td>220</td></tr>
-    </table>
-  </div>
-  <h2>Practical rules</h2>
-  <div class="card">
-    <div class="rule-item"><span class="rule-num">01</span><span class="rule-text"><strong>Protein is non-negotiable.</strong> Hit 215g every single day. This is the single biggest lever for muscle preservation during a cut.</span></div>
-    <div class="rule-item"><span class="rule-num">02</span><span class="rule-text"><strong>Creatine: 5g daily, keep taking it.</strong> The extra water it holds is intracellular — not fat. Stopping it costs strength and muscle performance for zero benefit.</span></div>
-    <div class="rule-item"><span class="rule-num">03</span><span class="rule-text"><strong>Rest days drop to recommended rest kcal.</strong> Cut carbs, keep protein and fat identical. Never go below 55g fat per day.</span></div>
-    <div class="rule-item"><span class="rule-num">04</span><span class="rule-text"><strong>If weight stalls for 2 weeks:</strong> drop calories by 100 kcal from carbs only. Never drop below 1,950 kcal total. Never cut protein.</span></div>
-    <div class="rule-item"><span class="rule-num">05</span><span class="rule-text"><strong>Refeed every 2 weeks:</strong> one day at ~2,850 kcal, all extra from carbs. Same protein, same fat. Not a cheat day.</span></div>
-    <div class="rule-item"><span class="rule-num">06</span><span class="rule-text"><strong>10,000 steps/day</strong> is your best fat-loss tool — zero recovery cost, ~270 kcal net extra burn vs your previous 4k average.</span></div>
-  </div>
-</div>
+    <!-- ══ PHASES ══ -->
+    <div class="page" id="phases">
+      <div class="g3">
+        <div class="mc"><div class="v">Mar 16</div><div class="l">Start</div><div class="s">91.8 kg</div></div>
+        <div class="mc"><div class="v">Apr 27</div><div class="l">Mid-check</div><div class="s">~87–88 kg</div></div>
+        <div class="mc"><div class="v">Jun 1</div><div class="l">Goal</div><div class="s">83–85 kg</div></div>
+      </div>
+      <div class="tl">
+        <div class="tl-item"><div class="tl-dot active"></div><div class="tl-date">Mar 16 — Apr 6 · Weeks 1–3</div><div class="tl-title">Foundation</div><div class="tl-desc">Establish the deficit. Hit protein daily. Shoulder: bands + face pulls only. Weigh every Monday fasted. Expected: 1.8–2.5 kg down.</div></div>
+        <div class="tl-item"><div class="tl-dot future"></div><div class="tl-date">Apr 6 — Apr 27 · Weeks 4–6</div><div class="tl-title">Shoulder re-assessment</div><div class="tl-desc">Pain-free 7 days? Reintroduce incline DB at 50% load. Still painful? Book physio — don't wait. Add third cardio session. Another 1.5–2 kg expected.</div></div>
+        <div class="tl-item"><div class="tl-dot future"></div><div class="tl-date">Apr 27 — May 18 · Weeks 7–9</div><div class="tl-title">Main cut block</div><div class="tl-desc">Full training if cleared. Adjust calories −100 kcal if any week shows zero loss. 3x cardio locked. Tanita check-in. Target: 85–87 kg.</div></div>
+        <div class="tl-item"><div class="tl-dot future"></div><div class="tl-date">May 18 — Jun 1 · Weeks 10–11</div><div class="tl-title">Final push</div><div class="tl-desc">Tighten consistency. Reduce sodium final week. Maintain training intensity — no deload. Final Tanita. Target: 83–85 kg.</div></div>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Outcome scenarios</h3>
+        <table class="tbl" style="margin-top:8px">
+          <tr><th>Scenario</th><th>Final weight</th><th>Condition</th></tr>
+          <tr><td><span class="badge bs">Conservative</span></td><td>84–85 kg</td><td>Consistent, 1–2 bad days max/week</td></tr>
+          <tr><td><span class="badge bw">Moderate</span></td><td>85–87 kg</td><td>1–2 rough weeks total</td></tr>
+          <tr><td><span class="badge bi">Aggressive</span></td><td>83 kg</td><td>Perfect execution + 3x cardio every week</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Weight projection</h3>
+        <div class="chart-wrap" style="height:200px"><canvas id="projChart"></canvas></div>
+      </div>
+    </div>
 
-<!-- ═══════════════ PHASES ═══════════════ -->
-<div class="page" id="phases">
-  <div class="grid-3" style="margin-top:0.5rem">
-    <div class="metric-card"><div class="val">Mar 16</div><div class="lbl">Start</div><div class="sub">91.8 kg</div></div>
-    <div class="metric-card"><div class="val">Apr 27</div><div class="lbl">Mid-check</div><div class="sub">Target ~87–88 kg</div></div>
-    <div class="metric-card"><div class="val">Jun 1</div><div class="lbl">Goal</div><div class="sub">Target 83–85 kg</div></div>
-  </div>
-  <div class="timeline">
-    <div class="tl-item"><div class="tl-dot active"></div><div class="tl-date">Mar 16 — Apr 6 · Weeks 1–3</div><div class="tl-title">Foundation</div><div class="tl-desc">Establish the deficit. Hit protein daily. Shoulder rehab: band external rotations + face pulls only, zero pressing. Weigh every Monday morning fasted. Expected drop: 1.8–2.5 kg.</div></div>
-    <div class="tl-item"><div class="tl-dot future"></div><div class="tl-date">Apr 6 — Apr 27 · Weeks 4–6</div><div class="tl-title">Shoulder re-assessment</div><div class="tl-desc">At week 4, test shoulder — if pain-free for 7 days, reintroduce light incline DB press at 50% previous loads. If still painful, see a physio. Add a third cardio session. Expected: another 1.5–2 kg down.</div></div>
-    <div class="tl-item"><div class="tl-dot future"></div><div class="tl-date">Apr 27 — May 18 · Weeks 7–9</div><div class="tl-title">Main cut block</div><div class="tl-desc">Full training resumes if cleared. Calories adjust down by 100 kcal if any week shows zero loss. 3x cardio locked in. Check-in on Tanita. Target window: 85–87 kg.</div></div>
-    <div class="tl-item"><div class="tl-dot future"></div><div class="tl-date">May 18 — Jun 1 · Weeks 10–11</div><div class="tl-title">Final push</div><div class="tl-desc">Tighten food consistency. Reduce sodium slightly in final week to clear water retention. Maintain all training intensity — do not deload. Final Tanita check-in. Target: 83–85 kg.</div></div>
-  </div>
-  <div class="card" style="margin-top:1rem">
-    <h3>Realistic outcomes</h3>
-    <table style="margin-top:8px">
-      <tr><th>Scenario</th><th>Final weight</th><th>Condition</th></tr>
-      <tr><td><span class="badge badge-success">Conservative</span></td><td>84–85 kg</td><td>Consistent deficit, 1–2 bad days max per week</td></tr>
-      <tr><td><span class="badge badge-warn">Moderate</span></td><td>85–87 kg</td><td>1–2 rough weeks in the 11-week block</td></tr>
-      <tr><td><span class="badge badge-info">Aggressive</span></td><td>83 kg</td><td>Perfect execution + 3x cardio every week</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Weight projection</h3>
-    <div class="chart-wrap" style="height:200px"><canvas id="projectionChart"></canvas></div>
-  </div>
-</div>
+    <!-- ══ RULES ══ -->
+    <div class="page" id="rules">
+      <h2>Quick reference</h2>
+      <div class="alert as" style="margin-top:0">
+        <strong>Daily non-negotiables:</strong> 215g protein · 5g creatine · Hit calorie target from Dashboard · 10,000 steps · Weigh Monday AM fasted
+      </div>
+      <div class="card">
+        <h3>Shoulder recovery protocol</h3>
+        <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Incline/flat/decline bench press — suspended until cleared</span></div>
+        <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Dips (any variation) — suspended</span></div>
+        <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Overhead tricep extensions — suspended</span></div>
+        <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Dumbbell shoulder press — suspended</span></div>
+        <div class="rule-item"><span class="rule-num" style="color:var(--accent)">✓</span><span class="rule-text">Band external rotations — 3×20 each arm, daily</span></div>
+        <div class="rule-item"><span class="rule-num" style="color:var(--accent)">✓</span><span class="rule-text">Face pulls — 3×15, light, controlled</span></div>
+        <div class="rule-item"><span class="rule-num" style="color:var(--accent)">✓</span><span class="rule-text">Lateral raises, cable flyes (low-to-high), pec dec — safe</span></div>
+        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text"><strong>Week 4 test:</strong> pain-free 7 consecutive days → try incline DB @ 20kg. Any discomfort: stop and book physio.</span></div>
+      </div>
+      <div class="card">
+        <h3>Adjustment triggers</h3>
+        <table class="tbl">
+          <tr><th>Situation</th><th>Action</th></tr>
+          <tr><td>Weight stalls 2 weeks</td><td>Drop 100 kcal from carbs only</td></tr>
+          <tr><td>Losing >1 kg/week</td><td>Add 150 kcal from carbs — protect muscle</td></tr>
+          <tr><td>Performance drops >15%</td><td>Refeed day immediately</td></tr>
+          <tr><td>Shoulder still painful at week 4</td><td>Book physio — do not wait</td></tr>
+          <tr><td>Scale spikes 1–2 kg suddenly</td><td>Likely water — check 5-day trend</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Tanita reading guide</h3>
+        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Same time, fasted, after bathroom, before water</span></div>
+        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Athletic mode BF% — trend direction matters more than absolute number</span></div>
+        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Creatine adds ~1–2 kg on BIA — normal, expected, not fat</span></div>
+        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Use 7-day rolling average — don't react to single-day spikes</span></div>
+      </div>
+    </div>
 
-<!-- ═══════════════ RULES ═══════════════ -->
-<div class="page" id="rules">
-  <h2>Quick reference</h2>
-  <div class="alert alert-success" style="margin-top:0.5rem">
-    <strong>Daily non-negotiables:</strong> 215g protein · 5g creatine · Hit calorie target from Dashboard · 10,000 steps · Weigh Monday AM
-  </div>
-  <div class="card">
-    <h3>Shoulder recovery protocol</h3>
-    <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Incline / flat / decline bench press — suspended until cleared</span></div>
-    <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Dips (bodyweight or weighted) — suspended</span></div>
-    <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Overhead tricep extensions — suspended</span></div>
-    <div class="rule-item"><span class="rule-num" style="color:var(--danger)">✕</span><span class="rule-text">Dumbbell shoulder press — suspended</span></div>
-    <div class="rule-item"><span class="rule-num" style="color:var(--accent2)">✓</span><span class="rule-text">Band external rotations — 3×20 each arm daily</span></div>
-    <div class="rule-item"><span class="rule-num" style="color:var(--accent2)">✓</span><span class="rule-text">Face pulls — 3×15, light, controlled</span></div>
-    <div class="rule-item"><span class="rule-num" style="color:var(--accent2)">✓</span><span class="rule-text">Lateral raises, cable flyes (low-to-high), pec dec — safe</span></div>
-    <div class="rule-item"><span class="rule-num">→</span><span class="rule-text"><strong>Week 4 test:</strong> if pain-free 7 consecutive days, try incline DB @ 20kg. Any discomfort: stop and book physio.</span></div>
-  </div>
-  <div class="card">
-    <h3>Adjustment triggers</h3>
-    <table>
-      <tr><th>Situation</th><th>Action</th></tr>
-      <tr><td>Weight stalls for 2 weeks</td><td>Drop 100 kcal from carbs (not protein, not fat)</td></tr>
-      <tr><td>Losing >1 kg/week</td><td>Add 150 kcal from carbs — protect muscle</td></tr>
-      <tr><td>Performance drops >15%</td><td>Refeed day immediately, reassess deficit</td></tr>
-      <tr><td>Shoulder still painful at week 4</td><td>Book physio — do not wait longer</td></tr>
-      <tr><td>Weight spikes 1–2 kg suddenly</td><td>Likely water/sodium — check 5-day trend</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Tanita reading guide</h3>
-    <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Same time of day, fasted, after bathroom, before water</span></div>
-    <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Athletic mode BF% is your trend reference — direction matters more than absolute value</span></div>
-    <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Creatine adds ~1–2 kg on BIA — normal, expected, not fat</span></div>
-    <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Use 7-day rolling average to smooth out daily water fluctuations</span></div>
-  </div>
-</div>
+  </div><!-- /main -->
+
+  <!-- ── BOTTOM NAV (mobile) ── -->
+  <nav class="bottom-nav">
+    <button class="bnav-btn active" onclick="showPage('dashboard',this)"><span class="bnav-icon">◎</span>Home</button>
+    <button class="bnav-btn" onclick="showPage('training',this)"><span class="bnav-icon">◈</span>Train</button>
+    <button class="bnav-btn" onclick="showPage('nutrition',this)"><span class="bnav-icon">◇</span>Food</button>
+    <button class="bnav-btn" onclick="showPage('phases',this)"><span class="bnav-icon">◉</span>Phases</button>
+    <button class="bnav-btn" onclick="showPage('rules',this)"><span class="bnav-icon">◻</span>Rules</button>
+  </nav>
+
+</div><!-- /app -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-// ─── CONSTANTS ─────────────────────────────────────────────────────────
-const START_WEIGHT = 91.8;
-const TARGET_WEIGHT = 84;
-const TARGET_DATE = new Date('2026-06-01');
-const PROTEIN_G = 215;
-const FAT_G = 68;
-const HEIGHT_CM = 189;
-const AGE = 23;
+// ── SUPABASE CONFIG ─────────────────────────────────────────────────────
+const SUPA_URL = 'https://hqyhaaonjblolphlfudq.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxeWhhYW9uamJsb2xwaGxmdWRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1OTY3MDgsImV4cCI6MjA4OTE3MjcwOH0.nfbThmxOTKpfLr7Ut_Mm61vT5xkmWG4DFkSAIwhQapQ';
+const USER_ID = 'arnaud';
 
-// ─── DATA ──────────────────────────────────────────────────────────────
-const DAYS = [
-  { name:"Monday — chest & triceps", badge:"danger", badgeText:"shoulder modified",
-    exercises:[
-      {name:"Cable fly (low to high)", detail:"4×12–15 @ 10–12.5kg/side · replaces incline press", mod:true},
-      {name:"Pec dec machine", detail:"4×12–15 @ moderate load · safe plane", mod:true},
-      {name:"Machine chest press", detail:"3×12 @ 50–55kg · only if pain-free", mod:true},
-      {name:"Tricep pushdown (rope)", detail:"4×10–12 @ 25–30kg"},
-      {name:"Skull crushers (flat, elbows forward)", detail:"4×10 @ 25kg · replaces overhead extension", mod:true},
-      {name:"Close-grip pushup or cable pushdown", detail:"3×max · replaces dips", mod:true},
-      {name:"Band external rotation (rehab)", detail:"3×20 each arm", mod:true},
-    ]},
-  { name:"Tuesday — back & biceps", badge:"success", badgeText:"full session",
-    exercises:[
-      {name:"Pull-ups", detail:"3×max (aim 7–9 reps)"},
-      {name:"Lat pulldown (bar)", detail:"Warmup 50, 60kg → 4 sets: 65/70/75/75kg @ 8–12"},
-      {name:"Seated cable row", detail:"4×10–12 @ 68kg · neutral grip"},
-      {name:"Cable curl triple drop", detail:"3 sets: 25kg×7 → 22.5×7 → 20×7"},
-      {name:"Hammer curl", detail:"4 sets: 20/22.5/25/25kg @ 8–12"},
-      {name:"Face pull (added)", detail:"3×15 @ 15–17.5kg · rear delt health", mod:true},
-    ]},
-  { name:"Wednesday — legs & shoulders", badge:"warn", badgeText:"shoulders modified",
-    exercises:[
-      {name:"Leg extension", detail:"Warmup 60kg → 4×8–12 @ 100kg"},
-      {name:"Leg curl", detail:"4×8–12 @ 60kg"},
-      {name:"Leg press", detail:"4×10–12 @ moderate load", mod:true},
-      {name:"Calf raises", detail:"4×8–12 @ 30kg"},
-      {name:"Lateral raises", detail:"5×10–12 @ 10kg"},
-      {name:"Rear delt fly", detail:"3×15 @ 8–10kg · important during recovery", mod:true},
-      {name:"Band external rotation (rehab)", detail:"3×20 each arm", mod:true},
-      {name:"Dumbbell shoulder press — SUSPENDED", detail:"Resume when cleared", mod:true},
-    ]},
-  { name:"Thursday — rest or optional", badge:"info", badgeText:"optional",
-    exercises:[
-      {name:"Cardio option", detail:"30–40 min incline walk or bike @ 130–145 bpm"},
-      {name:"Core", detail:"Plank 45s × 3 + hanging leg raises × 12 + ab wheel × 10"},
-      {name:"If lifting: machines only", detail:"60–70% load, 3×15, no failure"},
-    ]},
-  { name:"Friday — chest & triceps (repeat)", badge:"danger", badgeText:"shoulder modified",
-    exercises:[
-      {name:"Same as Monday", detail:"Identical modified protocol"},
-      {name:"Progress test", detail:"If shoulder improved, try 1 set incline DB @ 20kg as test"},
-    ]},
-  { name:"Saturday — back & biceps (repeat)", badge:"success", badgeText:"full session",
-    exercises:[
-      {name:"Same as Tuesday", detail:"Full session · no modifications"},
-      {name:"Load progression", detail:"If Tuesday felt easy, add 2.5kg to main compounds"},
-    ]},
-  { name:"Sunday — legs & shoulders (repeat)", badge:"warn", badgeText:"shoulders modified",
-    exercises:[
-      {name:"Same as Wednesday", detail:"Full legs · modified shoulders"},
-      {name:"Cardio finisher", detail:"20 min bike after lifting · ~150–200 kcal extra", mod:true},
-    ]},
-];
+const api = async (path, opts={}) => {
+  const r = await fetch(SUPA_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...opts.headers },
+    ...opts
+  });
+  if (!r.ok) throw new Error(await r.text());
+  const t = await r.text();
+  return t ? JSON.parse(t) : null;
+};
 
-const MEALS = [
-  {time:"07:00 — Breakfast", name:"Egg white omelette + oats + Greek yogurt", items:["200g egg whites + 2 whole eggs","80g oats with water","150g 0% Greek yogurt + 10g honey"], p:52, c:55, f:12, kcal:540},
-  {time:"10:30 — Mid-morning", name:"Cottage cheese + fruit", items:["250g 0% cottage cheese","1 apple or 150g berries","5g creatine in water"], p:32, c:22, f:4, kcal:250},
-  {time:"13:00 — Lunch", name:"Chicken + rice + vegetables", items:["200g cooked chicken breast","150g cooked rice","200g mixed veg","10ml olive oil"], p:60, c:65, f:14, kcal:630},
-  {time:"16:30 — Pre-workout", name:"Tuna + rice cakes", items:["150g canned tuna in water","4 plain rice cakes","Black coffee optional"], p:36, c:28, f:2, kcal:278},
-  {time:"20:00 — Post-workout dinner", name:"Salmon + sweet potato + salad", items:["150g salmon fillet","150g sweet potato","Large green salad, lemon dressing"], p:40, c:30, f:22, kcal:470},
-  {time:"22:00 — Evening", name:"Skyr", items:["200g plain Skyr","Optional: casein scoop if needed"], p:28, c:15, f:2, kcal:190},
-];
+// ── CONSTANTS ───────────────────────────────────────────────────────────
+const START_W = 91.8, TARGET_W = 84, TARGET_DATE = new Date('2026-06-01');
+const PROTEIN_G = 215, FAT_G = 68, HEIGHT_CM = 189, AGE = 23;
 
-// ─── STATE ──────────────────────────────────────────────────────────────
-const STATE_KEY = 'arnaud_cut_2026_v2';
-function loadState() {
-  try { return JSON.parse(localStorage.getItem(STATE_KEY)) || { logs:[], shoulderCleared:false, dailySteps:4000 }; }
-  catch { return { logs:[], shoulderCleared:false, dailySteps:4000 }; }
-}
-function saveState() { localStorage.setItem(STATE_KEY, JSON.stringify(state)); }
-let state = loadState();
+// ── LOCAL STATE (mirror of DB) ──────────────────────────────────────────
+let state = { logs: [], shoulderCleared: false, dailySteps: 4000 };
 
-// ─── CALCULATIONS ──────────────────────────────────────────────────────
-function calcBMR(weightKg) {
-  // Mifflin-St Jeor for male
-  return Math.round(10 * weightKg + 6.25 * Height_CM_val() - 5 * AGE + 5);
-}
-function Height_CM_val() { return HEIGHT_CM; }
-
-function calcTrainingBurn(shoulderCleared) {
-  // 6x/week lifting. Shoulder injury reduces upper body sessions slightly
-  // Sedentary base: 1.2x BMR already baked into activity
-  // Training adds: ~300 kcal/session for full sessions, ~200 for modified
-  // 3 full sessions (Tue/Sat + legs) + 3 modified (Mon/Fri chest + Wed shoulders)
-  if (shoulderCleared) return 350; // all 6 sessions full burn above sedentary
-  return 280; // modified chest days burn less
+// ── SYNC STATUS ─────────────────────────────────────────────────────────
+function setSyncStatus(s, msg) {
+  const dot = document.getElementById('sync-dot');
+  const txt = document.getElementById('sync-text');
+  dot.className = 'sync-dot ' + s;
+  txt.textContent = msg;
 }
 
-function calcStepsBurn(steps, weightKg) {
-  // ~0.04 kcal/step/kg (conservative MET estimate for walking)
-  const baselineSteps = 4000;
-  const extraSteps = Math.max(0, steps - baselineSteps);
-  return Math.round(extraSteps * 0.04 * (weightKg / 80));
-}
-
-function getAdaptiveTargets() {
-  const logs = state.logs;
-  const currentWeight = logs.length > 0 ? logs[logs.length-1].weight : START_WEIGHT;
-  const bmr = calcBMR(currentWeight);
-  const trainingBurn = calcTrainingBurn(state.shoulderCleared);
-  const stepsBurn = calcStepsBurn(state.dailySteps, currentWeight);
-  const tdee = Math.round(bmr * 1.2 + trainingBurn + stepsBurn);
-  // Target deficit of ~600 kcal/day
-  const targetDeficit = 600;
-  const trainingTarget = Math.max(1950, tdee - targetDeficit);
-  const restTarget = Math.max(1900, trainingTarget - 200);
-  const actualDeficit = tdee - trainingTarget;
-  const weeklyLoss = ((actualDeficit * 7) / 7700).toFixed(2); // 7700 kcal ≈ 1kg fat
-
-  // Carbs = remaining after protein and fat
-  const proteinKcal = PROTEIN_G * 4;
-  const fatKcal = FAT_G * 9;
-  const carbKcal = Math.max(0, trainingTarget - proteinKcal - fatKcal);
-  const carbG = Math.round(carbKcal / 4);
-
-  return { currentWeight, bmr, trainingBurn, stepsBurn, tdee, trainingTarget:Math.round(trainingTarget), restTarget:Math.round(restTarget), actualDeficit:Math.round(actualDeficit), weeklyLoss, carbG, carbKcal:Math.round(carbKcal) };
-}
-
-// ─── UPDATE ADAPTIVE UI ────────────────────────────────────────────────
-function updateAdaptivePanel() {
-  const t = getAdaptiveTargets();
-
-  document.getElementById('adp-weight').textContent = t.currentWeight.toFixed(1) + ' kg';
-  document.getElementById('adp-bmr').textContent = t.bmr.toLocaleString() + ' kcal';
-  document.getElementById('adp-training').textContent = '+' + t.trainingBurn + ' kcal' + (state.shoulderCleared ? ' (full)' : ' (modified)');
-  document.getElementById('adp-steps').textContent = t.stepsBurn > 0 ? '+' + t.stepsBurn + ' kcal (' + (state.dailySteps/1000).toFixed(1) + 'k steps)' : 'baseline (4k steps)';
-  document.getElementById('adp-tdee').textContent = t.tdee.toLocaleString() + ' kcal';
-
-  const targetEl = document.getElementById('adp-target');
-  targetEl.textContent = t.trainingTarget.toLocaleString() + ' kcal';
-  targetEl.className = 'adaptive-value ' + (t.trainingTarget < 2100 ? 'warn' : 'green');
-
-  document.getElementById('adp-rest').textContent = t.restTarget.toLocaleString() + ' kcal';
-
-  const defEl = document.getElementById('adp-deficit');
-  defEl.textContent = '−' + t.actualDeficit + ' kcal/day';
-  defEl.className = 'adaptive-value ' + (t.actualDeficit >= 500 ? 'green' : 'warn');
-
-  const wlEl = document.getElementById('adp-weekly');
-  const wl = parseFloat(t.weeklyLoss);
-  wlEl.textContent = '~' + wl.toFixed(2) + ' kg/week';
-  wlEl.className = 'adaptive-value ' + (wl >= 0.5 && wl <= 1.0 ? 'green' : wl > 1.0 ? 'warn' : 'red');
-
-  // Macro bars
-  const totalKcal = t.trainingTarget;
-  const pPct = Math.round((PROTEIN_G * 4 / totalKcal) * 100);
-  const cPct = Math.round((t.carbKcal / totalKcal) * 100);
-  const fPct = Math.round((FAT_G * 9 / totalKcal) * 100);
-  document.getElementById('bar-p').style.width = pPct + '%';
-  document.getElementById('bar-c').style.width = cPct + '%';
-  document.getElementById('bar-f').style.width = fPct + '%';
-  document.getElementById('bar-p-label').textContent = PROTEIN_G + 'g · ' + (PROTEIN_G*4) + ' kcal';
-  document.getElementById('bar-c-label').textContent = t.carbG + 'g · ' + t.carbKcal + ' kcal';
-  document.getElementById('bar-f-label').textContent = FAT_G + 'g · ' + (FAT_G*9) + ' kcal';
-
-  // Sync nutrition page
-  document.getElementById('nut-training').textContent = t.trainingTarget.toLocaleString();
-  document.getElementById('nut-rest').textContent = t.restTarget.toLocaleString();
-
-  // Diet alert
-  const alertEl = document.getElementById('diet-alert');
-  if (t.trainingTarget < 2050) {
-    alertEl.innerHTML = '<div class="alert alert-warn">Calories are getting low. Prioritise protein. Consider adding steps rather than cutting more food.</div>';
-  } else if (wl > 1.0) {
-    alertEl.innerHTML = '<div class="alert alert-warn">Projected loss exceeds 1 kg/week — add 150 kcal from carbs to protect muscle.</div>';
-  } else if (wl < 0.4) {
-    alertEl.innerHTML = '<div class="alert alert-info">Deficit is modest. Consider adding steps or a cardio session to widen it.</div>';
-  } else {
-    alertEl.innerHTML = '<div class="alert alert-success">Deficit looks good. Stay consistent and hit your protein target daily.</div>';
+// ── LOAD FROM SUPABASE ──────────────────────────────────────────────────
+async function loadFromDB() {
+  setSyncStatus('syncing', 'Syncing…');
+  try {
+    const [logsRes, settRes] = await Promise.all([
+      api('weight_logs?user_id=eq.' + USER_ID + '&order=date.asc&select=date,weight,bf_percent'),
+      api('settings?user_id=eq.' + USER_ID + '&select=shoulder_cleared,daily_steps')
+    ]);
+    state.logs = (logsRes || []).map(r => ({ date: r.date, weight: parseFloat(r.weight), bf: r.bf_percent ? parseFloat(r.bf_percent) : null }));
+    if (settRes && settRes[0]) {
+      state.shoulderCleared = settRes[0].shoulder_cleared;
+      state.dailySteps = settRes[0].daily_steps;
+    }
+    setSyncStatus('synced', 'Synced · ' + new Date().toLocaleTimeString());
+    return true;
+  } catch(e) {
+    setSyncStatus('error', 'Offline — changes saved locally');
+    loadLocalFallback();
+    return false;
   }
 }
 
-// ─── CONTROLS ──────────────────────────────────────────────────────────
+function loadLocalFallback() {
+  try {
+    const s = JSON.parse(localStorage.getItem('arnaud_cut_fallback') || '{}');
+    if (s.logs) state.logs = s.logs;
+    if (s.shoulderCleared !== undefined) state.shoulderCleared = s.shoulderCleared;
+    if (s.dailySteps) state.dailySteps = s.dailySteps;
+  } catch {}
+}
+
+function saveLocalFallback() {
+  localStorage.setItem('arnaud_cut_fallback', JSON.stringify(state));
+}
+
+// ── SAVE SETTINGS ───────────────────────────────────────────────────────
+async function saveSettings() {
+  saveLocalFallback();
+  try {
+    await api('settings?user_id=eq.' + USER_ID, {
+      method: 'PATCH',
+      body: JSON.stringify({ shoulder_cleared: state.shoulderCleared, daily_steps: state.dailySteps, updated_at: new Date().toISOString() })
+    });
+    setSyncStatus('synced', 'Saved · ' + new Date().toLocaleTimeString());
+  } catch { setSyncStatus('error', 'Could not save — check connection'); }
+}
+
+// ── SAVE WEIGHT LOG ─────────────────────────────────────────────────────
+async function saveWeightLog(entry) {
+  saveLocalFallback();
+  setSyncStatus('syncing', 'Saving…');
+  try {
+    await api('weight_logs', {
+      method: 'POST',
+      headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+      body: JSON.stringify({ user_id: USER_ID, date: entry.date, weight: entry.weight, bf_percent: entry.bf || null })
+    });
+    setSyncStatus('synced', 'Saved · ' + new Date().toLocaleTimeString());
+  } catch { setSyncStatus('error', 'Could not save — check connection'); }
+}
+
+// ── DELETE WEIGHT LOG ───────────────────────────────────────────────────
+async function deleteWeightLog(date) {
+  setSyncStatus('syncing', 'Deleting…');
+  try {
+    await api('weight_logs?user_id=eq.' + USER_ID + '&date=eq.' + date, { method: 'DELETE' });
+    setSyncStatus('synced', 'Deleted · ' + new Date().toLocaleTimeString());
+  } catch { setSyncStatus('error', 'Could not delete — check connection'); }
+}
+
+// ── CALCULATIONS ─────────────────────────────────────────────────────────
+function calcBMR(w) { return Math.round(10 * w + 6.25 * HEIGHT_CM - 5 * AGE + 5); }
+
+function calcStepsBurn(steps, w) {
+  const extra = Math.max(0, steps - 4000);
+  return Math.round(extra * 0.04 * (w / 80));
+}
+
+function getTargets() {
+  const w = state.logs.length ? state.logs[state.logs.length - 1].weight : START_W;
+  const bmr = calcBMR(w);
+  const trainBurn = state.shoulderCleared ? 350 : 280;
+  const stepsBurn = calcStepsBurn(state.dailySteps, w);
+  const tdee = Math.round(bmr * 1.2 + trainBurn + stepsBurn);
+  const trainTarget = Math.max(1950, Math.round(tdee - 600));
+  const restTarget = Math.max(1900, trainTarget - 200);
+  const deficit = tdee - trainTarget;
+  const weeklyLoss = parseFloat(((deficit * 7) / 7700).toFixed(2));
+  const protKcal = PROTEIN_G * 4;
+  const fatKcal = FAT_G * 9;
+  const carbKcal = Math.max(0, trainTarget - protKcal - fatKcal);
+  const carbG = Math.round(carbKcal / 4);
+  return { w, bmr, trainBurn, stepsBurn, tdee, trainTarget, restTarget, deficit, weeklyLoss, carbG, carbKcal };
+}
+
+// ── UPDATE ADAPTIVE UI ───────────────────────────────────────────────────
+function updateAdaptive() {
+  const t = getTargets();
+  document.getElementById('a-weight').textContent = t.w.toFixed(1) + ' kg';
+  document.getElementById('a-bmr').textContent = t.bmr.toLocaleString() + ' kcal';
+  document.getElementById('a-train').textContent = '+' + t.trainBurn + ' kcal ' + (state.shoulderCleared ? '(full)' : '(modified)');
+  document.getElementById('a-steps').textContent = t.stepsBurn > 0 ? '+' + t.stepsBurn + ' kcal (' + (state.dailySteps / 1000).toFixed(1) + 'k steps)' : '0 (at baseline)';
+  document.getElementById('a-tdee').textContent = t.tdee.toLocaleString() + ' kcal';
+
+  const tEl = document.getElementById('a-target');
+  tEl.textContent = t.trainTarget.toLocaleString() + ' kcal';
+  tEl.className = 'adp-val ' + (t.trainTarget < 2100 ? 'warn' : 'green');
+  document.getElementById('a-rest').textContent = t.restTarget.toLocaleString() + ' kcal';
+
+  const dEl = document.getElementById('a-deficit');
+  dEl.textContent = '−' + t.deficit + ' kcal/day';
+  dEl.className = 'adp-val ' + (t.deficit >= 500 ? 'green' : 'warn');
+
+  const wEl = document.getElementById('a-weekly');
+  wEl.textContent = '~' + t.weeklyLoss.toFixed(2) + ' kg/week';
+  wEl.className = 'adp-val ' + (t.weeklyLoss >= 0.5 && t.weeklyLoss <= 1.0 ? 'green' : t.weeklyLoss > 1.0 ? 'warn' : 'red');
+
+  // Bars
+  const tot = t.trainTarget;
+  const pp = Math.round((PROTEIN_G * 4 / tot) * 100);
+  const cp = Math.round((t.carbKcal / tot) * 100);
+  const fp = Math.round((FAT_G * 9 / tot) * 100);
+  document.getElementById('bp').style.width = pp + '%';
+  document.getElementById('bc').style.width = cp + '%';
+  document.getElementById('bf').style.width = fp + '%';
+  document.getElementById('bp-l').textContent = PROTEIN_G + 'g · ' + (PROTEIN_G * 4) + ' kcal';
+  document.getElementById('bc-l').textContent = t.carbG + 'g · ' + t.carbKcal + ' kcal';
+  document.getElementById('bf-l').textContent = FAT_G + 'g · ' + (FAT_G * 9) + ' kcal';
+
+  // Sync nutrition page numbers
+  document.getElementById('nut-train').textContent = t.trainTarget.toLocaleString();
+  document.getElementById('nut-rest').textContent = t.restTarget.toLocaleString();
+
+  // Alert
+  const al = document.getElementById('diet-alert');
+  if (t.trainTarget < 2050) al.innerHTML = '<div class="alert aw">Calories are getting low. Prioritise steps over further cuts.</div>';
+  else if (t.weeklyLoss > 1.0) al.innerHTML = '<div class="alert aw">Projected loss >1 kg/week — add 150 kcal from carbs to protect muscle.</div>';
+  else if (t.weeklyLoss < 0.4) al.innerHTML = '<div class="alert ai">Deficit is modest — consider adding steps or a cardio session.</div>';
+  else al.innerHTML = '<div class="alert as">Deficit is well calibrated. Stay consistent and hit protein daily.</div>';
+}
+
+// ── CONTROLS ─────────────────────────────────────────────────────────────
 function onShoulderChange() {
   state.shoulderCleared = document.getElementById('shoulder-toggle').checked;
-  saveState();
-  const cleared = state.shoulderCleared;
-  document.getElementById('shoulder-status-text').textContent = cleared ? 'Cleared — full training active' : 'Injured — protocol active';
-  document.getElementById('shoulder-status-text').style.color = cleared ? 'var(--accent2)' : 'var(--danger)';
-  document.getElementById('training-shoulder-dot').style.background = cleared ? 'var(--accent2)' : 'var(--danger)';
-  document.getElementById('training-shoulder-text').textContent = cleared ? 'Shoulder: cleared — full training active' : 'Shoulder: injury protocol active';
-  updateAdaptivePanel();
+  updateShoulderUI();
+  updateAdaptive();
+  saveSettings();
 }
 
 function onStepsChange() {
-  const steps = parseInt(document.getElementById('steps-slider').value);
-  state.dailySteps = steps;
-  saveState();
-  document.getElementById('steps-display').textContent = steps.toLocaleString();
-  updateAdaptivePanel();
+  state.dailySteps = parseInt(document.getElementById('steps-slider').value);
+  document.getElementById('steps-disp').textContent = state.dailySteps.toLocaleString();
+  updateAdaptive();
+  saveSettings();
 }
 
-// ─── NAVIGATION ────────────────────────────────────────────────────────
+function updateShoulderUI() {
+  const c = state.shoulderCleared;
+  document.getElementById('sh-status-text').textContent = c ? 'Cleared — full training active' : 'Injured — protocol active';
+  document.getElementById('sh-status-text').style.color = c ? 'var(--accent)' : 'var(--danger)';
+  document.getElementById('tr-sh-dot').style.background = c ? 'var(--accent)' : 'var(--danger)';
+  document.getElementById('tr-sh-text').textContent = c ? 'Shoulder: cleared — full training active' : 'Shoulder: injury protocol active';
+}
+
+// ── NAV ──────────────────────────────────────────────────────────────────
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  if (btn) btn.classList.add('active');
-  if (id === 'phases') renderProjectionChart();
+
+  // Activate matching buttons in both sidebars
+  document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b => {
+    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + id + "'")) b.classList.add('active');
+  });
+
+  if (id === 'phases') renderProjChart();
 }
 
-// ─── HEADER ────────────────────────────────────────────────────────────
+// ── HEADER ───────────────────────────────────────────────────────────────
 function updateHeader() {
   const now = new Date();
-  const weeksLeft = Math.max(0, Math.ceil((TARGET_DATE - now) / (7 * 86400000)));
-  document.getElementById('weeks-left-val').textContent = weeksLeft;
-  const logs = state.logs;
-  if (logs.length > 0) {
-    const latest = logs[logs.length-1].weight;
-    const loss = (START_WEIGHT - latest).toFixed(1);
-    document.getElementById('loss-val').textContent = parseFloat(loss) >= 0 ? '−' + loss : '+' + Math.abs(loss);
+  const weeks = Math.max(0, Math.ceil((TARGET_DATE - now) / (7 * 86400000)));
+  document.getElementById('h-weeks').textContent = weeks;
+  if (state.logs.length) {
+    const latest = state.logs[state.logs.length - 1].weight;
+    const loss = (START_W - latest).toFixed(1);
+    document.getElementById('h-loss').textContent = parseFloat(loss) >= 0 ? '−' + loss + 'kg' : '+' + Math.abs(loss) + 'kg';
   } else {
-    document.getElementById('loss-val').textContent = '—';
+    document.getElementById('h-loss').textContent = '—';
   }
 }
 
-// ─── TRAINING ──────────────────────────────────────────────────────────
+// ── TRAINING ─────────────────────────────────────────────────────────────
+const DAYS = [
+  {name:"Monday — chest & triceps", badge:"bd", bt:"shoulder modified", ex:[
+    {n:"Cable fly (low to high)", d:"4×12–15 @ 10–12.5kg/side · replaces incline press", m:1},
+    {n:"Pec dec machine", d:"4×12–15 @ moderate load · safe plane", m:1},
+    {n:"Machine chest press", d:"3×12 @ 50–55kg · only if pain-free", m:1},
+    {n:"Tricep pushdown (rope)", d:"4×10–12 @ 25–30kg"},
+    {n:"Skull crushers (flat, elbows forward)", d:"4×10 @ 25kg · replaces overhead ext", m:1},
+    {n:"Close-grip pushup or cable pushdown", d:"3×max · replaces dips", m:1},
+    {n:"Band external rotation (rehab)", d:"3×20 each arm", m:1},
+  ]},
+  {name:"Tuesday — back & biceps", badge:"bs", bt:"full session", ex:[
+    {n:"Pull-ups", d:"3×max (aim 7–9 reps)"},
+    {n:"Lat pulldown (bar)", d:"Warmup 50/60 → 4 sets: 65/70/75/75kg @ 8–12"},
+    {n:"Seated cable row", d:"4×10–12 @ 68kg · neutral grip"},
+    {n:"Cable curl triple drop", d:"3 sets: 25×7 → 22.5×7 → 20×7"},
+    {n:"Hammer curl", d:"4 sets: 20/22.5/25/25kg @ 8–12"},
+    {n:"Face pull (added)", d:"3×15 @ 15–17.5kg · rear delt health", m:1},
+  ]},
+  {name:"Wednesday — legs & shoulders", badge:"bw", bt:"shoulders modified", ex:[
+    {n:"Leg extension", d:"Warmup 60 → 4×8–12 @ 100kg"},
+    {n:"Leg curl", d:"4×8–12 @ 60kg"},
+    {n:"Leg press", d:"4×10–12 @ moderate load", m:1},
+    {n:"Calf raises", d:"4×8–12 @ 30kg"},
+    {n:"Lateral raises", d:"5×10–12 @ 10kg"},
+    {n:"Rear delt fly", d:"3×15 @ 8–10kg · important during recovery", m:1},
+    {n:"Band external rotation (rehab)", d:"3×20 each arm", m:1},
+    {n:"Dumbbell shoulder press — SUSPENDED", d:"Resume when cleared for 7 days", m:1},
+  ]},
+  {name:"Thursday — rest or optional", badge:"bi", bt:"optional", ex:[
+    {n:"Cardio option", d:"30–40 min incline walk or bike @ 130–145 bpm"},
+    {n:"Core", d:"Plank 45s × 3 + leg raises × 12 + ab wheel × 10"},
+    {n:"If lifting: machines only", d:"60–70% load, 3×15, no failure"},
+  ]},
+  {name:"Friday — chest & triceps (repeat)", badge:"bd", bt:"shoulder modified", ex:[
+    {n:"Same as Monday", d:"Identical modified protocol"},
+    {n:"Progress test", d:"If shoulder improved: try 1 set incline DB @ 20kg"},
+  ]},
+  {name:"Saturday — back & biceps (repeat)", badge:"bs", bt:"full session", ex:[
+    {n:"Same as Tuesday", d:"Full session · no modifications"},
+    {n:"Load progression", d:"If Tuesday felt easy, add 2.5kg to compounds"},
+  ]},
+  {name:"Sunday — legs & shoulders (repeat)", badge:"bw", bt:"shoulders modified", ex:[
+    {n:"Same as Wednesday", d:"Full legs · modified shoulders"},
+    {n:"Cardio finisher", d:"20 min bike after lifting · ~150–200 kcal extra", m:1},
+  ]},
+];
+
 function renderTraining() {
-  const bc = {danger:'badge-danger', warn:'badge-warn', info:'badge-info', success:'badge-success'};
-  document.getElementById('training-days').innerHTML = DAYS.map((d,i) => `
-    <div class="day-block" id="dblock-${i}">
-      <div class="day-header" onclick="toggleDay(${i})">
+  document.getElementById('training-days').innerHTML = DAYS.map((d, i) => `
+    <div class="day-block" id="db${i}">
+      <div class="day-hdr" onclick="toggleDay(${i})">
         <span class="day-title">${d.name}</span>
-        <div class="day-header-right">
-          <span class="badge ${bc[d.badge]}">${d.badgeText}</span>
-          <span class="chevron">▼</span>
-        </div>
+        <div class="day-hdr-r"><span class="badge ${d.badge}">${d.bt}</span><span class="chev">▼</span></div>
       </div>
-      <div class="day-body" id="dbody-${i}">
-        ${d.exercises.map(e=>`<div class="ex-row">
-          <span class="ex-name">${e.name}${e.mod?'<span class="badge badge-mod">modified</span>':''}</span>
-          <span class="ex-detail">${e.detail}</span>
-        </div>`).join('')}
+      <div class="day-body" id="dbody${i}">
+        ${d.ex.map(e => `<div class="ex-row"><span class="ex-name">${e.n}${e.m ? '<span class="badge bmod">modified</span>' : ''}</span><span class="ex-det">${e.d}</span></div>`).join('')}
       </div>
     </div>`).join('');
 }
 
 function toggleDay(i) {
-  const b = document.getElementById('dbody-'+i);
-  const bl = document.getElementById('dblock-'+i);
-  const open = b.classList.toggle('open');
-  bl.classList.toggle('open', open);
+  const body = document.getElementById('dbody' + i);
+  const block = document.getElementById('db' + i);
+  const open = body.classList.toggle('open');
+  block.classList.toggle('open', open);
 }
 
-// ─── MEALS ─────────────────────────────────────────────────────────────
+// ── MEALS ─────────────────────────────────────────────────────────────────
+const MEALS = [
+  {t:"07:00 — Breakfast", n:"Egg white omelette + oats + Greek yogurt", i:["200g egg whites + 2 whole eggs","80g oats with water","150g 0% Greek yogurt + 10g honey"], p:52,c:55,f:12,k:540},
+  {t:"10:30 — Mid-morning", n:"Cottage cheese + fruit", i:["250g 0% cottage cheese","1 apple or 150g berries","5g creatine in water"], p:32,c:22,f:4,k:250},
+  {t:"13:00 — Lunch", n:"Chicken + rice + vegetables", i:["200g cooked chicken breast","150g cooked rice","200g mixed veg","10ml olive oil"], p:60,c:65,f:14,k:630},
+  {t:"16:30 — Pre-workout", n:"Tuna + rice cakes", i:["150g canned tuna in water","4 plain rice cakes","Black coffee optional"], p:36,c:28,f:2,k:278},
+  {t:"20:00 — Dinner", n:"Salmon + sweet potato + salad", i:["150g salmon fillet","150g sweet potato","Large green salad, lemon dressing"], p:40,c:30,f:22,k:470},
+  {t:"22:00 — Evening", n:"Skyr", i:["200g plain Skyr","Casein scoop optional"], p:28,c:15,f:2,k:190},
+];
+
 function renderMeals() {
   let tp=0,tc=0,tf=0,tk=0;
   const html = MEALS.map(m => {
-    tp+=m.p;tc+=m.c;tf+=m.f;tk+=m.kcal;
+    tp+=m.p;tc+=m.c;tf+=m.f;tk+=m.k;
     return `<div class="meal-card">
-      <div class="meal-header"><div><div class="meal-time">${m.time}</div><div class="meal-name">${m.name}</div></div><div class="meal-kcal">${m.kcal}</div></div>
+      <div class="meal-hdr"><div><div class="meal-time">${m.t}</div><div class="meal-name">${m.n}</div></div><div class="meal-kcal">${m.k}</div></div>
       <div class="meal-body">
-        <div class="meal-items">${m.items.join(' · ')}</div>
-        <div class="macro-row"><span class="mpill mpill-p">${m.p}g protein</span><span class="mpill mpill-c">${m.c}g carbs</span><span class="mpill mpill-f">${m.f}g fat</span></div>
+        <div class="meal-items">${m.i.join(' · ')}</div>
+        <div class="macro-row"><span class="mp mp-p">${m.p}g protein</span><span class="mp mp-c">${m.c}g carbs</span><span class="mp mp-f">${m.f}g fat</span></div>
       </div>
     </div>`;
   }).join('');
   document.getElementById('meals-list').innerHTML = html +
-    `<div style="display:flex;gap:8px;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--border)">
-      <span class="mpill mpill-p">Total: ${tp}g protein</span>
-      <span class="mpill mpill-c">${tc}g carbs</span>
-      <span class="mpill mpill-f">${tf}g fat</span>
-      <span class="mpill" style="color:var(--text)">${tk} kcal</span>
+    `<div style="display:flex;gap:6px;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--border)">
+      <span class="mp mp-p">Total: ${tp}g protein</span><span class="mp mp-c">${tc}g carbs</span><span class="mp mp-f">${tf}g fat</span>
+      <span class="mp" style="color:var(--text);border-color:var(--border2)">${tk} kcal</span>
     </div>`;
 }
 
-// ─── WEIGHT LOG ────────────────────────────────────────────────────────
-function logWeight() {
-  const w = parseFloat(document.getElementById('new-weight').value);
-  const bf = parseFloat(document.getElementById('new-bf').value);
-  const d = document.getElementById('new-date').value;
+// ── WEIGHT LOG ─────────────────────────────────────────────────────────────
+async function logWeight() {
+  const w = parseFloat(document.getElementById('nw').value);
+  const bf = parseFloat(document.getElementById('nbf').value);
+  const d = document.getElementById('nd').value;
   if (!w || !d || w < 75 || w > 105) { alert('Please enter a valid weight (75–105 kg) and date.'); return; }
-  // Remove existing entry for same date
+  const entry = { date: d, weight: w, bf: isNaN(bf) ? null : bf };
   state.logs = state.logs.filter(l => l.date !== d);
-  state.logs.push({ date:d, weight:w, bf: isNaN(bf) ? null : bf });
+  state.logs.push(entry);
   state.logs.sort((a,b) => a.date.localeCompare(b.date));
-  saveState();
-  document.getElementById('new-weight').value = '';
-  document.getElementById('new-bf').value = '';
+  document.getElementById('nw').value = '';
+  document.getElementById('nbf').value = '';
+  saveLocalFallback();
   renderWeightChart();
   renderLogTable();
   updateHeader();
-  updateAdaptivePanel();
+  updateAdaptive();
+  await saveWeightLog(entry);
 }
 
-function deleteLog(date) {
+async function deleteLog(date) {
   state.logs = state.logs.filter(l => l.date !== date);
-  saveState();
+  saveLocalFallback();
   renderWeightChart();
   renderLogTable();
   updateHeader();
-  updateAdaptivePanel();
+  updateAdaptive();
+  await deleteWeightLog(date);
 }
 
 function renderLogTable() {
   const logs = state.logs;
   if (!logs.length) {
-    document.getElementById('log-table-wrap').innerHTML = '<p style="font-size:12px;color:var(--muted);padding:8px 0">No check-ins logged yet. Log your first Monday weigh-in above.</p>';
+    document.getElementById('log-wrap').innerHTML = '<p style="font-size:12px;color:var(--muted);padding:8px 0">No check-ins yet. Log your first Monday weigh-in above.</p>';
     return;
   }
   const rows = [...logs].reverse().map((l,i,arr) => {
     const prev = arr[i+1];
     const delta = prev ? (l.weight - prev.weight).toFixed(1) : null;
-    const dc = delta===null ? 'var(--muted)' : parseFloat(delta)<0 ? 'var(--accent2)' : 'var(--danger)';
+    const dc = delta===null ? 'var(--muted)' : parseFloat(delta)<0 ? 'var(--accent)' : 'var(--danger)';
     return `<tr>
       <td>${l.date}</td>
       <td style="font-weight:500">${l.weight} kg</td>
       <td style="color:${dc}">${delta===null ? '—' : (parseFloat(delta)>0?'+':'')+delta+' kg'}</td>
       <td style="color:var(--muted)">${l.bf ? l.bf+'%' : '—'}</td>
-      <td><button class="btn-ghost" style="font-size:10px;padding:3px 8px" onclick="deleteLog('${l.date}')">×</button></td>
+      <td><button class="btn-sm" onclick="deleteLog('${l.date}')">×</button></td>
     </tr>`;
   }).join('');
-  document.getElementById('log-table-wrap').innerHTML = `
-    <table style="margin-top:10px">
-      <tr><th>Date</th><th>Weight</th><th>Change</th><th>BF%</th><th></th></tr>
-      ${rows}
-    </table>`;
+  document.getElementById('log-wrap').innerHTML = `<table class="tbl" style="margin-top:10px"><tr><th>Date</th><th>Weight</th><th>Change</th><th>BF%</th><th></th></tr>${rows}</table>`;
 }
 
-// ─── WEIGHT CHART ──────────────────────────────────────────────────────
-let wChart = null;
+// ── WEIGHT CHART ───────────────────────────────────────────────────────────
+let wChartInst = null;
 function renderWeightChart() {
-  const canvas = document.getElementById('weightChart');
+  const canvas = document.getElementById('wChart');
   if (!canvas) return;
-  const logs = state.logs;
-  const labels = ['Mar 16', ...logs.map(l => l.date.slice(5).replace('-','/'))];
-  const data = [START_WEIGHT, ...logs.map(l => l.weight)];
-  const target = labels.map(() => TARGET_WEIGHT);
-  if (wChart) wChart.destroy();
-  wChart = new Chart(canvas, {
+  const labels = ['Mar 16', ...state.logs.map(l => l.date.slice(5).replace('-','/'))];
+  const data = [START_W, ...state.logs.map(l => l.weight)];
+  const target = labels.map(() => TARGET_W);
+  if (wChartInst) wChartInst.destroy();
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridCol = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  const tickCol = isDark ? '#7a8278' : '#9a9e98';
+  wChartInst = new Chart(canvas, {
     type:'line',
     data:{ labels, datasets:[
-      { label:'Actual weight', data, borderColor:'#a8d4a0', backgroundColor:'rgba(168,212,160,0.06)', tension:0.3, pointRadius:4, pointBackgroundColor:'#6bbd5e', fill:true },
-      { label:'Target (84 kg)', data:target, borderColor:'rgba(212,168,74,0.4)', borderDash:[4,4], pointRadius:0 }
+      {label:'Actual weight', data, borderColor: isDark?'#a8d4a0':'#2a7d3f', backgroundColor: isDark?'rgba(168,212,160,0.06)':'rgba(42,125,63,0.06)', tension:0.3, pointRadius:4, pointBackgroundColor: isDark?'#6bbd5e':'#2a7d3f', fill:true},
+      {label:'Target (84 kg)', data:target, borderColor:'rgba(176,107,0,0.4)', borderDash:[4,4], pointRadius:0}
     ]},
-    options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ labels:{ color:'#7a8278', font:{size:11,family:'DM Mono'}, boxWidth:16 }}},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tickCol, font:{size:11,family:'DM Mono'}, boxWidth:16}}},
       scales:{
-        y:{ min:82, max:94, ticks:{color:'#7a8278',font:{size:11}}, grid:{color:'rgba(255,255,255,0.05)'} },
-        x:{ ticks:{color:'#7a8278',font:{size:10},maxTicksLimit:8}, grid:{color:'rgba(255,255,255,0.04)'} }
+        y:{min:82,max:94,ticks:{color:tickCol,font:{size:11}},grid:{color:gridCol}},
+        x:{ticks:{color:tickCol,font:{size:10},maxTicksLimit:8},grid:{color:gridCol}}
       }
     }
   });
 }
 
-// ─── PROJECTION CHART ──────────────────────────────────────────────────
-let pChart = null;
-function renderProjectionChart() {
-  const canvas = document.getElementById('projectionChart');
+// ── PROJECTION CHART ───────────────────────────────────────────────────────
+let pChartInst = null;
+function renderProjChart() {
+  const canvas = document.getElementById('projChart');
   if (!canvas) return;
+  if (pChartInst) pChartInst.destroy();
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridCol = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+  const tickCol = isDark ? '#7a8278' : '#9a9e98';
   const weeks = ['Now','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11'];
-  const cons = [91.8,91.1,90.3,89.5,88.8,88.0,87.2,86.5,85.7,85.0,84.3];
-  const agg  = [91.8,90.8,89.8,88.8,87.8,86.8,85.8,85.0,84.2,83.5,83.0];
-  if (pChart) pChart.destroy();
-  pChart = new Chart(canvas, {
+  pChartInst = new Chart(canvas, {
     type:'line',
-    data:{ labels:weeks, datasets:[
-      { label:'Conservative (84–85 kg)', data:cons, borderColor:'#6bbd5e', backgroundColor:'transparent', tension:0.3, pointRadius:3 },
-      { label:'Aggressive (83 kg)', data:agg, borderColor:'#4a9fd4', backgroundColor:'transparent', tension:0.3, pointRadius:3, borderDash:[5,4] }
+    data:{labels:weeks, datasets:[
+      {label:'Conservative (84–85kg)', data:[91.8,91.1,90.3,89.5,88.8,88.0,87.2,86.5,85.7,85.0,84.3], borderColor: isDark?'#6bbd5e':'#2a7d3f', backgroundColor:'transparent', tension:0.3, pointRadius:3},
+      {label:'Aggressive (83kg)', data:[91.8,90.8,89.8,88.8,87.8,86.8,85.8,85.0,84.2,83.5,83.0], borderColor: isDark?'#4a9fd4':'#1a5fa8', backgroundColor:'transparent', tension:0.3, pointRadius:3, borderDash:[5,4]},
     ]},
-    options:{ responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{ labels:{ color:'#7a8278', font:{size:11}, boxWidth:16 }}},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:tickCol, font:{size:11}, boxWidth:16}}},
       scales:{
-        y:{ min:82, max:93, ticks:{color:'#7a8278',font:{size:11}}, grid:{color:'rgba(255,255,255,0.05)'} },
-        x:{ ticks:{color:'#7a8278',font:{size:11}}, grid:{color:'rgba(255,255,255,0.04)'} }
+        y:{min:82,max:93,ticks:{color:tickCol,font:{size:11}},grid:{color:gridCol}},
+        x:{ticks:{color:tickCol,font:{size:11}},grid:{color:gridCol}}
       }
     }
   });
 }
 
-// ─── RESTORE STATE TO UI ───────────────────────────────────────────────
+// ── RESTORE CONTROLS ───────────────────────────────────────────────────────
 function restoreControls() {
   document.getElementById('shoulder-toggle').checked = state.shoulderCleared;
   document.getElementById('steps-slider').value = state.dailySteps;
-  document.getElementById('steps-display').textContent = state.dailySteps.toLocaleString();
-  if (state.shoulderCleared) {
-    document.getElementById('shoulder-status-text').textContent = 'Cleared — full training active';
-    document.getElementById('shoulder-status-text').style.color = 'var(--accent2)';
-    document.getElementById('training-shoulder-dot').style.background = 'var(--accent2)';
-    document.getElementById('training-shoulder-text').textContent = 'Shoulder: cleared — full training active';
-  }
+  document.getElementById('steps-disp').textContent = state.dailySteps.toLocaleString();
+  updateShoulderUI();
 }
 
-// ─── INIT ──────────────────────────────────────────────────────────────
-document.getElementById('new-date').value = new Date().toISOString().slice(0,10);
-restoreControls();
-renderTraining();
-renderMeals();
-renderLogTable();
-renderWeightChart();
-updateHeader();
-updateAdaptivePanel();
+// ── INIT ───────────────────────────────────────────────────────────────────
+document.getElementById('nd').value = new Date().toISOString().slice(0,10);
+
+loadFromDB().then(() => {
+  restoreControls();
+  renderTraining();
+  renderMeals();
+  renderLogTable();
+  renderWeightChart();
+  updateHeader();
+  updateAdaptive();
+});
+
+// Re-render charts when color scheme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  renderWeightChart();
+  if (document.getElementById('projChart')) renderProjChart();
+});
 </script>
 </body>
 </html>
