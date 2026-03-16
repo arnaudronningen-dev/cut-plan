@@ -100,30 +100,43 @@ body{
 .nav-btn.active{background:var(--accent-bg);color:var(--accent);border:1px solid var(--accent-border);}
 .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
 
-/* ── BOTTOM NAV (mobile) ───────────────────────────────── */
-.bottom-nav{
-  display:none;
-  position:fixed;bottom:0;left:0;right:0;
-  background:var(--bg2);
-  border-top:1px solid var(--border);
-  padding:8px 0 max(8px,env(safe-area-inset-bottom));
-  z-index:100;
+/* ── TOP TAB BAR (all screen sizes, below header) ─────── */
+.top-tabs{
+  grid-column:1/-1;
+  display:flex;
+  overflow-x:auto;
+  scrollbar-width:none;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  padding:0 1rem;
+  gap:0;
+  position:sticky;
+  top:72px;
+  z-index:90;
 }
-@media(max-width:768px){.bottom-nav{display:flex;}}
-.bnav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+@media(max-width:768px){.top-tabs{top:64px;padding:0 0.5rem;}}
+.top-tabs::-webkit-scrollbar{display:none;}
+.ttab{
   background:none;border:none;color:var(--muted);
-  font-family:var(--mono);font-size:9px;padding:4px 2px;cursor:pointer;
-  letter-spacing:0.04em;text-transform:uppercase;transition:color 0.15s;
+  font-family:var(--mono);font-size:11px;
+  padding:10px 16px;cursor:pointer;white-space:nowrap;
+  letter-spacing:0.05em;text-transform:uppercase;
+  border-bottom:2px solid transparent;
+  transition:all 0.15s;flex-shrink:0;
 }
-.bnav-btn.active{color:var(--accent);}
-.bnav-icon{font-size:18px;line-height:1;}
+.ttab:hover{color:var(--text);}
+.ttab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* ── BOTTOM NAV (mobile) ───────────────────────────────── */
+.bottom-nav{display:none;}
+.bnav-btn{display:none;}
+.bnav-icon{display:none;}
 
 /* ── MAIN CONTENT ──────────────────────────────────────── */
 .main{
   overflow-y:auto;
 }
-@media(max-width:768px){.main{padding-bottom:72px;}}
+@media(max-width:768px){.main{padding-bottom:16px;}}
 
 .page{display:none;padding:2rem;max-width:860px;}
 .page.active{display:block;}
@@ -140,6 +153,7 @@ body{
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background 0.3s;}
 .sync-dot.synced{background:var(--accent);}
 .sync-dot.syncing{background:var(--warn);animation:pulse 1s infinite;}
+.sync-dot.warn{background:var(--warn);}
 .sync-dot.error{background:var(--danger);}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
 
@@ -336,6 +350,15 @@ h3{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--acc
     </div>
   </header>
 
+  <!-- ── TOP TABS ── -->
+  <div class="top-tabs">
+    <button class="ttab active" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button class="ttab" onclick="showPage('training',this)">Training</button>
+    <button class="ttab" onclick="showPage('nutrition',this)">Nutrition</button>
+    <button class="ttab" onclick="showPage('phases',this)">Phases</button>
+    <button class="ttab" onclick="showPage('rules',this)">Rules</button>
+  </div>
+
   <!-- ── SIDEBAR ── -->
   <nav class="sidebar">
     <div class="sidebar-section">
@@ -422,7 +445,7 @@ h3{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--acc
       <div class="card">
         <div class="frow">
           <div class="fg"><label>Weight (kg)</label><input type="number" id="nw" step="0.1" min="75" max="105" placeholder="e.g. 90.5"></div>
-          <div class="fg"><label>BF% (athletic)</label><input type="number" id="nbf" step="0.1" min="5" max="35" placeholder="e.g. 17.5"></div>
+          <div class="fg"><label>BF% (standard)</label><input type="number" id="nbf" step="0.1" min="5" max="35" placeholder="e.g. 13.9"></div>
           <div class="fg"><label>Date</label><input type="date" id="nd"></div>
           <div class="fg" style="justify-content:flex-end"><label style="visibility:hidden">x</label><button class="btn" onclick="logWeight()">Log</button></div>
         </div>
@@ -539,7 +562,7 @@ h3{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--acc
       <div class="card">
         <h3>Tanita reading guide</h3>
         <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Same time, fasted, after bathroom, before water</span></div>
-        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Athletic mode BF% — trend direction matters more than absolute number</span></div>
+        <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Standard mode BF% — trend direction matters more than absolute number. Keep using standard consistently.</span></div>
         <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Creatine adds ~1–2 kg on BIA — normal, expected, not fat</span></div>
         <div class="rule-item"><span class="rule-num">→</span><span class="rule-text">Use 7-day rolling average — don't react to single-day spikes</span></div>
       </div>
@@ -547,14 +570,6 @@ h3{font-size:10px;text-transform:uppercase;letter-spacing:0.09em;color:var(--acc
 
   </div><!-- /main -->
 
-  <!-- ── BOTTOM NAV (mobile) ── -->
-  <nav class="bottom-nav">
-    <button class="bnav-btn active" onclick="showPage('dashboard',this)"><span class="bnav-icon">◎</span>Home</button>
-    <button class="bnav-btn" onclick="showPage('training',this)"><span class="bnav-icon">◈</span>Train</button>
-    <button class="bnav-btn" onclick="showPage('nutrition',this)"><span class="bnav-icon">◇</span>Food</button>
-    <button class="bnav-btn" onclick="showPage('phases',this)"><span class="bnav-icon">◉</span>Phases</button>
-    <button class="bnav-btn" onclick="showPage('rules',this)"><span class="bnav-icon">◻</span>Rules</button>
-  </nav>
 
 </div><!-- /app -->
 
@@ -565,12 +580,21 @@ const SUPA_URL = 'https://hqyhaaonjblolphlfudq.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxeWhhYW9uamJsb2xwaGxmdWRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1OTY3MDgsImV4cCI6MjA4OTE3MjcwOH0.nfbThmxOTKpfLr7Ut_Mm61vT5xkmWG4DFkSAIwhQapQ';
 const USER_ID = 'arnaud';
 
-const api = async (path, opts={}) => {
-  const r = await fetch(SUPA_URL + '/rest/v1/' + path, {
-    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=representation', ...opts.headers },
-    ...opts
-  });
-  if (!r.ok) throw new Error(await r.text());
+// Core fetch — minimal headers for maximum mobile Safari compatibility
+const api = async (path, method, body, extraHeaders={}) => {
+  const headers = {
+    'apikey': SUPA_KEY,
+    'Authorization': 'Bearer ' + SUPA_KEY,
+    ...extraHeaders
+  };
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
+  const opts = { method: method || 'GET', headers };
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  const r = await fetch(SUPA_URL + '/rest/v1/' + path, opts);
+  if (!r.ok) {
+    const msg = await r.text();
+    throw new Error(r.status + ': ' + msg);
+  }
   const t = await r.text();
   return t ? JSON.parse(t) : null;
 };
@@ -592,13 +616,23 @@ function setSyncStatus(s, msg) {
 
 // ── LOAD FROM SUPABASE ──────────────────────────────────────────────────
 async function loadFromDB() {
+  // When opened as a local file, CORS will always block Supabase — detect early
+  if (window.location.protocol === 'file:') {
+    setSyncStatus('warn', 'Deploy to Vercel to enable cloud sync — using local data for now');
+    loadLocalFallback();
+    return false;
+  }
   setSyncStatus('syncing', 'Syncing…');
   try {
     const [logsRes, settRes] = await Promise.all([
-      api('weight_logs?user_id=eq.' + USER_ID + '&order=date.asc&select=date,weight,bf_percent'),
-      api('settings?user_id=eq.' + USER_ID + '&select=shoulder_cleared,daily_steps')
+      api('weight_logs?user_id=eq.' + USER_ID + '&order=date.asc&select=date,weight,bf_percent', 'GET'),
+      api('settings?user_id=eq.' + USER_ID + '&select=shoulder_cleared,daily_steps', 'GET')
     ]);
-    state.logs = (logsRes || []).map(r => ({ date: r.date, weight: parseFloat(r.weight), bf: r.bf_percent ? parseFloat(r.bf_percent) : null }));
+    state.logs = (logsRes || []).map(r => ({
+      date: r.date,
+      weight: parseFloat(r.weight),
+      bf: r.bf_percent ? parseFloat(r.bf_percent) : null
+    }));
     if (settRes && settRes[0]) {
       state.shoulderCleared = settRes[0].shoulder_cleared;
       state.dailySteps = settRes[0].daily_steps;
@@ -606,7 +640,8 @@ async function loadFromDB() {
     setSyncStatus('synced', 'Synced · ' + new Date().toLocaleTimeString());
     return true;
   } catch(e) {
-    setSyncStatus('error', 'Offline — changes saved locally');
+    console.error('loadFromDB error:', e);
+    setSyncStatus('error', 'Sync failed — using local data');
     loadLocalFallback();
     return false;
   }
@@ -628,36 +663,58 @@ function saveLocalFallback() {
 // ── SAVE SETTINGS ───────────────────────────────────────────────────────
 async function saveSettings() {
   saveLocalFallback();
+  if (window.location.protocol === 'file:') return;
   try {
-    await api('settings?user_id=eq.' + USER_ID, {
-      method: 'PATCH',
-      body: JSON.stringify({ shoulder_cleared: state.shoulderCleared, daily_steps: state.dailySteps, updated_at: new Date().toISOString() })
-    });
+    await api(
+      'settings?user_id=eq.' + USER_ID,
+      'PATCH',
+      { shoulder_cleared: state.shoulderCleared, daily_steps: state.dailySteps, updated_at: new Date().toISOString() }
+    );
     setSyncStatus('synced', 'Saved · ' + new Date().toLocaleTimeString());
-  } catch { setSyncStatus('error', 'Could not save — check connection'); }
+  } catch(e) {
+    console.error('saveSettings error:', e);
+    setSyncStatus('error', 'Could not save — check connection');
+  }
 }
 
 // ── SAVE WEIGHT LOG ─────────────────────────────────────────────────────
+// Uses ?on_conflict= query param upsert — no Prefer header, works on mobile Safari
 async function saveWeightLog(entry) {
   saveLocalFallback();
+  if (window.location.protocol === 'file:') return;
   setSyncStatus('syncing', 'Saving…');
   try {
-    await api('weight_logs', {
-      method: 'POST',
-      headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
-      body: JSON.stringify({ user_id: USER_ID, date: entry.date, weight: entry.weight, bf_percent: entry.bf || null })
-    });
+    await api(
+      'weight_logs?on_conflict=user_id,date',
+      'POST',
+      {
+        user_id: USER_ID,
+        date: entry.date,
+        weight: entry.weight,
+        bf_percent: (entry.bf !== null && entry.bf !== undefined) ? entry.bf : null
+      }
+    );
     setSyncStatus('synced', 'Saved · ' + new Date().toLocaleTimeString());
-  } catch { setSyncStatus('error', 'Could not save — check connection'); }
+  } catch(e) {
+    console.error('saveWeightLog error:', e);
+    setSyncStatus('error', 'Save failed — data kept locally');
+  }
 }
 
 // ── DELETE WEIGHT LOG ───────────────────────────────────────────────────
 async function deleteWeightLog(date) {
+  if (window.location.protocol === 'file:') return;
   setSyncStatus('syncing', 'Deleting…');
   try {
-    await api('weight_logs?user_id=eq.' + USER_ID + '&date=eq.' + date, { method: 'DELETE' });
+    await api(
+      'weight_logs?user_id=eq.' + USER_ID + '&date=eq.' + date,
+      'DELETE'
+    );
     setSyncStatus('synced', 'Deleted · ' + new Date().toLocaleTimeString());
-  } catch { setSyncStatus('error', 'Could not delete — check connection'); }
+  } catch(e) {
+    console.error('deleteWeightLog error:', e);
+    setSyncStatus('error', 'Delete failed — check connection');
+  }
 }
 
 // ── CALCULATIONS ─────────────────────────────────────────────────────────
@@ -757,14 +814,13 @@ function updateShoulderUI() {
 // ── NAV ──────────────────────────────────────────────────────────────────
 function showPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn, .ttab').forEach(b => b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-
-  // Activate matching buttons in both sidebars
-  document.querySelectorAll('.nav-btn,.bnav-btn').forEach(b => {
-    if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + id + "'")) b.classList.add('active');
+  // Activate every matching nav button (sidebar + top tabs)
+  document.querySelectorAll('.nav-btn, .ttab').forEach(b => {
+    const oc = b.getAttribute('onclick') || '';
+    if (oc.includes("'" + id + "'")) b.classList.add('active');
   });
-
   if (id === 'phases') renderProjChart();
 }
 
